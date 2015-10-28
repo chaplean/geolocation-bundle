@@ -9,6 +9,13 @@
             "homepage": "http://chaplean.com/"
         }
     ],
+    "autoload": {
+        "psr-0": {
+            "Chaplean\\Bundle\\GeolocationBundle": "",
+            "SymfonyStandard": "app/"
+        }
+    },
+    "target-dir" : "Chaplean/Bundle/GeolocationBundle",
     "repositories": [
         {
             "type": "composer",
@@ -24,22 +31,51 @@
         "symfony/swiftmailer-bundle": "~2.3",
         "symfony/monolog-bundle": "~2.4",
         "sensio/distribution-bundle": "~4.0",
-        "sensio/framework-extra-bundle": "^3.0.2"
+        "sensio/framework-extra-bundle": "^3.0.2",
+        "incenteev/composer-parameter-handler": "~2.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3",
         "chaplean/unit-bundle": "1.7.*",
         "chaplean/coding-standard": "1.1.*"
     },
-    "autoload": {
-        "psr-0": {
-            "Chaplean\\Bundle\\GeolocationBundle": "",
-            "SymfonyStandard": "app/"
-        }
+    "scripts": {
+        "post-root-package-install": [
+            "SymfonyStandard\\Composer::hookRootPackageInstall"
+        ],
+        "post-install-cmd": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::removeSymfonyStandardFiles"
+        ],
+        "post-update-cmd": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::removeSymfonyStandardFiles"
+        ]
     },
-    "target-dir" : "Chaplean/Bundle/GeolocationBundle",
     "config": {
         "bin-dir": "bin",
         "discard-changes": true
+    },
+    "extra": {
+        "symfony-app-dir": "app",
+        "symfony-bin-dir": "bin",
+        "symfony-var-dir": "var",
+        "symfony-web-dir": "web",
+        "symfony-assets-install": "symlink",
+        "incenteev-parameters": {
+            "file": "app/config/parameters.yml",
+            "keep-outdated": true
+        },
+        "branch-alias": {
+            "dev-master": "2.7-dev"
+        }
     }
 }

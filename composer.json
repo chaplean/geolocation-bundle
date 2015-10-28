@@ -33,11 +33,11 @@
     },
     "autoload": {
         "psr-0": {
-            "Chaplean\\Bundle\\BundleNameBundle": "",
+            "Chaplean\\Bundle\\GeolocationBundle": "",
             "SymfonyStandard": "app/"
         }
     },
-    "target-dir" : "Chaplean/Bundle/BundleNameBundle",
+    "target-dir" : "Chaplean/Bundle/GeolocationBundle",
     "config": {
         "bin-dir": "bin",
         "discard-changes": true

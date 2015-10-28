@@ -1,6 +1,6 @@
 <?php
 
-namespace Chaplean\Bundle\BundleNameBundle\DependencyInjection;
+namespace Chaplean\Bundle\GeolocationBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -18,7 +18,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('chaplean_BundleName');
+        $rootNode = $treeBuilder->root('chaplean_Geolocation');
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for

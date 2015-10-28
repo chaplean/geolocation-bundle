@@ -33,7 +33,7 @@ twig:
 assetic:
     debug:          "%use_assetic_debug%"
     use_controller: "%use_assetic_controller%"
-    bundles:        ['ChapleanBundleNameBundle']
+    bundles:        ['ChapleanGeolocationBundle']
     ruby: %ruby.bin%
     filters:
         cssrewrite: ~

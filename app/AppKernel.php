@@ -24,7 +24,7 @@ class AppKernel extends Kernel
             new Symfony\Bundle\MonologBundle\MonologBundle(),
             new Chaplean\Bundle\UnitBundle\ChapleanUnitBundle(),
             new Liip\FunctionalTestBundle\LiipFunctionalTestBundle(),
-            new Chaplean\Bundle\BundleNameBundle\ChapleanBundleNameBundle(),
+            new Chaplean\Bundle\GeolocationBundle\ChapleanGeolocationBundle(),
         );
     }
 

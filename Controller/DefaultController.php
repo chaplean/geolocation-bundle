@@ -1,6 +1,6 @@
 <?php
 
-namespace Chaplean\Bundle\BundleNameBundle\Controller;
+namespace Chaplean\Bundle\GeolocationBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Class DefaultController.
  *
- * @package   Chaplean\Bundle\BundleNameBundle\Controller
+ * @package   Chaplean\Bundle\GeolocationBundle\Controller
  * @author    Valentin - Chaplean <valentin@chaplean.com>
  * @copyright 2014 - 2015 Chaplean (http://www.chaplean.com)
  * @since     1.0.0
@@ -20,6 +20,6 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        return $this->render('ChapleanBundleNameBundle::layout.html.twig');
+        return $this->render('ChapleanGeolocationBundle::layout.html.twig');
     }
 }

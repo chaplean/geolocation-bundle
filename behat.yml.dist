@@ -2,7 +2,7 @@ default:
     suites:
         app_suite:
             type: symfony_bundle
-            bundle: ChapleanBundleNameBundle
+            bundle: ChapleanGeolocationBundle
     extensions:
         Behat\Symfony2Extension:
             kernel:

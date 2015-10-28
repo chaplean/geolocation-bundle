@@ -1,4 +1,4 @@
-chaplean_BundleName:
-    resource: "@ChapleanBundleNameBundle/Resources/config/routing.yml"
+chaplean_Geolocation:
+    resource: "@ChapleanGeolocationBundle/Resources/config/routing.yml"
     prefix:   /
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Chaplean\Bundle\BundleNameBundle\Features\Context;
+namespace Chaplean\Bundle\GeolocationBundle\Features\Context;
 
 use Chaplean\Bundle\UnitBundle\Features\Context\ChapleanContext;
 

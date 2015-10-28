@@ -1,6 +1,6 @@
 {
-    "name": "chaplean/bundle",
-    "description": "The Bundle base to fork",
+    "name": "chaplean/geolocation-bundle",
+    "description": "Geolocation Tools",
     "type": "symfony-bundle",
     "license": "MIT",
     "authors": [

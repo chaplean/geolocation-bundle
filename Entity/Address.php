@@ -2,7 +2,7 @@
 
 namespace Chaplean\Bundle\GeolocationBundle\Entity;
 
-use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Address

@@ -1,1 +1,4 @@
-#services:
+services:
+    chaplean_geolocation.ip_location:
+        class: Chaplean\Bundle\GeolocationBundle\Utility\IpLocation
+        arguments: [@request_stack, @cravler_max_mind_geo_ip.service.geo_ip_service]

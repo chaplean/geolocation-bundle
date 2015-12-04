@@ -113,7 +113,8 @@ class GeoLocationUtility
      */
     private function getAddressComponement($geocoderAddressComponement)
     {
-        $type = array_shift($geocoderAddressComponement->getTypes());
+        $types = $geocoderAddressComponement->getTypes();
+        $type = array_shift($types);
 
         return array($geocoderAddressComponement->getLongName(), $type);
     }

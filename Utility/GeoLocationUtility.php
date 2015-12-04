@@ -6,7 +6,6 @@ use Chaplean\Bundle\GeolocationBundle\Entity\Address;
 use Ivory\GoogleMap\Services\Geocoding\Geocoder;
 use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderAddressComponent;
 use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderResponse;
-use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderResult;
 
 /**
  * GeocoderUtility.php.

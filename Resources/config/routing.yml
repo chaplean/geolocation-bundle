@@ -1,3 +1,11 @@
-Geolocation_index:
-    path: /
-    defaults: { _controller: ChapleanGeolocationBundle:Default:index }
+chaplean_geolocation.rest:
+    path:     /
+    options:
+        expose: true
+
+chaplean_geolocation.geolocation:
+    type: rest
+    resource: Chaplean\Bundle\GeolocationBundle\Controller\Rest\GeolocationController
+    name_prefix: geolocation_rest_geolocation_
+    options:
+        expose: true

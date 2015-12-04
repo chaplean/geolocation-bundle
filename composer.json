@@ -1,6 +1,6 @@
 {
-    "name": "chaplean/bundle",
-    "description": "The Bundle base to fork",
+    "name": "chaplean/geolocation-bundle",
+    "description": "Geolocation Tools",
     "type": "symfony-bundle",
     "license": "MIT",
     "authors": [
@@ -32,11 +32,16 @@
         "symfony/monolog-bundle": "~2.4",
         "sensio/distribution-bundle": "~4.0",
         "sensio/framework-extra-bundle": "^3.0.2",
-        "incenteev/composer-parameter-handler": "~2.0"
+        "incenteev/composer-parameter-handler": "~2.0",
+        "cravler/maxmind-geoip-bundle": "^1.0",
+        "willdurand/geocoder": "2.8.*",
+        "egeloen/google-map-bundle": "~2.2",
+        "friendsofsymfony/rest-bundle": "~1.7",
+        "jms/serializer-bundle": "^1.1"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3",
-        "chaplean/unit-bundle": "1.7.*",
+        "chaplean/unit-bundle": "dev-dev",
         "chaplean/coding-standard": "1.1.*"
     },
     "scripts": {

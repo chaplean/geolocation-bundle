@@ -26,6 +26,9 @@ class IpLocationTest extends LogicalTest
      */
     private $requestStack;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $this->requestStack = \Mockery::mock('Symfony\Component\HttpFoundation\RequestStack');
@@ -33,6 +36,9 @@ class IpLocationTest extends LogicalTest
         $this->location = $this->getContainer()->get('chaplean_geolocation.ip_location');
     }
 
+    /**
+     * @return void
+     */
     public function testGetExistingCityFromIpv4()
     {
         $result = $this->location->getCityFromIp('82.226.243.129');
@@ -40,18 +46,27 @@ class IpLocationTest extends LogicalTest
         $this->assertEquals('Bordeaux', $result->city->name);
     }
 
+    /**
+     * @return void
+     */
     public function testGetNonExistingCityFromIpv4()
     {
         $result = $this->location->getCityFromIp('0.0.0.0');
         $this->assertNull($result);
     }
 
+    /**
+     * @return void
+     */
     public function testGetInvalidIpv4()
     {
         $result = $this->location->getCityFromIp('invalid ip');
         $this->assertNull($result);
     }
 
+    /**
+     * @return void
+     */
     public function testGetExistingCityFromIpv6()
     {
         $result = $this->location->getCityFromIp('2001:41d0:a:1308::1');
@@ -59,18 +74,27 @@ class IpLocationTest extends LogicalTest
         $this->assertEquals('Paris', $result->city->name);
     }
 
+    /**
+     * @return void
+     */
     public function testGetNonExistingCityFromIpv6()
     {
         $result = $this->location->getCityFromIp('::');
         $this->assertNull($result);
     }
 
+    /**
+     * @return void
+     */
     public function testGetInvalidIpv6()
     {
         $result = $this->location->getCityFromIp('invalid ip');
         $this->assertNull($result);
     }
 
+    /**
+     * @return void
+     */
     public function testGetExistingCityFromUser()
     {
         $existingCityRequest = Request::create('', 'GET', array(), array(), array(), array('REMOTE_ADDR' => '82.226.243.129'));
@@ -83,6 +107,9 @@ class IpLocationTest extends LogicalTest
         $this->assertEquals('Bordeaux', $result->city->name);
     }
 
+    /**
+     * @return void
+     */
     public function testGetNonExistingCityFromUser()
     {
         $nonExistingCityRequest = Request::create('', 'GET', array(), array(), array(), array('REMOTE_ADDR' => '0.0.0.0'));

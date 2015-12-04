@@ -1,0 +1,23 @@
+{
+  "name": "chaplean/geolocation-bundle",
+  "version": "1.0.0",
+  "authors": [
+    "Tom - Chaplean <tom@chaplean.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "1.3.*",
+    "angular-mocks": "1.3.*",
+    "angular-resource": "1.3.*"
+  },
+  "resolutions": {
+    "angular": "1.3.*"
+  }
+}

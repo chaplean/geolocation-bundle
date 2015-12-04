@@ -1,5 +1,6 @@
 .idea
 /web/bundles/
+coverage/
 /app/config/parameters.yml
 /var
 /build/

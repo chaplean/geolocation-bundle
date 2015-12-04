@@ -1,4 +1,5 @@
-chaplean_Geolocation:
+chaplean_geolocation:
+    type: rest
     resource: "@ChapleanGeolocationBundle/Resources/config/routing.yml"
-    prefix:   /
+    prefix:   /rest/
 

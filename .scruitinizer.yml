@@ -23,7 +23,7 @@ filter:
         - 'web/*'
 
 build:
-    project_setup:
+    dependencies:
         before:
             -
                 command: 'composer config -g github-oauth.github.com 7fa26c02ea1b016a956f5d774362096b6bf42d61'
@@ -38,4 +38,4 @@ checks:
         custom_coding_standard:
             git_repository: 'https://tom-chaplean@bitbucket.org/chaplean/coding-standard.git'
             git_version: '97f7f5d92c81b6e1566ae8d29ba3be81cc98788d'
-            ruleset_path: 'phpcs/ruleset.xml'
+            ruleset_path: 'phpcs/ChapleanStandard/ruleset.xml'

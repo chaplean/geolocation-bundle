@@ -3,6 +3,7 @@
 namespace Chaplean\Bundle\GeolocationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Address
@@ -16,56 +17,78 @@ class Address
      * @ORM\Id
      * @ORM\Column(type="integer", options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @JMS\Groups({"address_id", "address_all"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=200, nullable=false, name="block1")
+     *
+     * @JMS\Groups({"address_block1", "address_all"})
      */
     private $block1;
 
     /**
      * @ORM\Column(type="string", length=200, nullable=true, name="block2")
+     *
+     * @JMS\Groups({"address_block2", "address_all"})
      */
     private $block2;
 
     /**
      * @ORM\Column(type="string", length=200, nullable=true, name="block3")
+     *
+     * @JMS\Groups({"address_block3", "address_all"})
      */
     private $block3;
 
     /**
      * @ORM\Column(type="smallint", nullable=true, name="floor", options={"unsigned":true})
+     *
+     * @JMS\Groups({"address_floor", "address_all"})
      */
     private $floor;
 
     /**
      * @ORM\Column(type="string", length=60, nullable=false, name="city_complement")
+     *
+     * @JMS\Groups({"address_city", "address_all"})
      */
     private $city;
 
     /**
      * @ORM\Column(type="integer", length=5, nullable=true, name="zipcode")
+     *
+     * @JMS\Groups({"address_zipcode", "address_all"})
      */
     private $zipcode;
 
     /**
      * @ORM\Column(type="decimal", length=10, nullable=true, name="longitude", precision=10, scale=7)
+     *
+     * @JMS\Groups({"address_longitude", "address_all"})
      */
     private $longitude;
 
     /**
      * @ORM\Column(type="decimal", length=10, nullable=true, name="latitude", scale=7, precision=10)
+     *
+     * @JMS\Groups({"address_latitude", "address_all"})
      */
     private $latitude;
 
     /**
      * @ORM\Column(type="datetime", nullable=false, name="date_add")
+     *
+     * @JMS\Groups({"address_date_add", "address_all"})
      */
     private $dateAdd;
 
     /**
      * @ORM\Column(type="datetime", nullable=true, name="date_update")
+     *
+     * @JMS\Groups({"address_date_update", "address_all"})
      */
     private $dateUpdate;
 

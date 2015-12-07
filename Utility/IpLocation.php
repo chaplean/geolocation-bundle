@@ -4,6 +4,7 @@ namespace Chaplean\Bundle\GeolocationBundle\Utility;
 
 use Cravler\MaxMindGeoIpBundle\Service\GeoIpService;
 use GeoIp2\Exception\AddressNotFoundException;
+use GeoIp2\Model\City;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**

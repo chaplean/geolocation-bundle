@@ -1,6 +1,6 @@
 <?php
 
-namespace Chaplean\Bundle\GoogleMapBundle\Tests\Utility;
+namespace Chaplean\Bundle\GeolocationBundle\Tests\Utility;
 
 use Chaplean\Bundle\GeolocationBundle\Entity\Address;
 use Chaplean\Bundle\GeolocationBundle\Utility\GeoLocationUtility;

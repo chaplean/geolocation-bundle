@@ -361,7 +361,7 @@ class Address
      *
      * @JMS\VirtualProperty
      * @JMS\SerializedName("address")
-     * @JMS\Groups({"address_address" "address_all"})
+     * @JMS\Groups({"address_address", "address_all"})
      *
      * @return string
      */

@@ -355,4 +355,23 @@ class Address
 
         return $this;
     }
+
+    /**
+     * Get concatenated address parts
+     *
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("address")
+     * @JMS\Groups({"address_address" "address_all"})
+     *
+     * @return string
+     */
+    public function getAddress()
+    {
+        return $this->block1 . ' ' .
+            ($this->block2 ? $this->block2 . ' ' : '') .
+            ($this->block3 ? $this->block3 . ' ' : '') .
+            ($this->floor ? $this->floor . ' ' : '') .
+            ($this->zipcode ? $this->zipcode . ' ' : '') .
+            $this->city;
+    }
 }

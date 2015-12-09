@@ -10,6 +10,8 @@ use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderAddressComponent;
 use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderGeometry;
 use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderResponse;
 use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderResult;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Client;
 
 /**
@@ -45,9 +47,9 @@ class GeolocationControllerTest extends LogicalTest
     public function setUp()
     {
         $this->client = static::createClient();
+
         $this->ivoryGeocoderMock = \Mockery::mock('Ivory\GoogleMap\Services\Geocoding\Geocoder');
         $this->client->getContainer()->set('ivory_google_map.geocoder', $this->ivoryGeocoderMock);
-        $this->client->getContainer()->get('chaplean_geolocation.geolocation');
     }
 
     /**
@@ -134,5 +136,39 @@ class GeolocationControllerTest extends LogicalTest
         $this->assertEquals('9', $response['floor']);
         $this->assertEquals('Bordeaux', $response['city']);
         $this->assertEquals('33000', $response['zipcode']);
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetRegionDepartmentAction()
+    {
+        $this->client->request('GET', '/rest/geolocation', array(), array(), array(
+            'REMOTE_ADDR' => '82.226.243.129'
+        ));
+
+        $response = $this->client->getResponse();
+        $response = json_decode($response->getContent(), true);
+
+        $this->assertTrue(array_key_exists('region', $response));
+        $this->assertTrue(array_key_exists('department', $response));
+        $this->assertEquals('Aquitaine', $response['region']);
+        $this->assertEquals('Gironde', $response['department']);
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetRegionDepartmentActionWithoutAddressIp()
+    {
+        $this->client->request('GET', '/rest/geolocation');
+
+        $response = $this->client->getResponse();
+        $response = json_decode($response->getContent(), true);
+
+        $this->assertTrue(array_key_exists('region', $response));
+        $this->assertTrue(array_key_exists('department', $response));
+        $this->assertNull($response['region']);
+        $this->assertNull($response['department']);
     }
 }

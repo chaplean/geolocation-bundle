@@ -7,7 +7,7 @@ geolocation.factory('Geolocation', function($http, $q, $cookies) {
         getGeolocation: function () {
             var deffered = $q.defer();
             if (!$cookies.geolocation) {
-                $http.get('/rest/geolocation')
+                $http.get('rest/geolocation')
                     .success(function (response) {
                         geolocation.saveGeolocationCookie(response);
                         deffered.resolve(response);
@@ -16,20 +16,22 @@ geolocation.factory('Geolocation', function($http, $q, $cookies) {
                         deffered.reject({});
                     });
             } else {
-                deffered.resolve($cookies.geolocation);
+                deffered.resolve(JSON.parse($cookies.geolocation));
             }
             return deffered.promise;
         },
         saveGeolocationCookie: function (region, department) {
+            var geolocation;
             if (typeof region == 'object' && region.hasOwnProperty('region') && region.hasOwnProperty('department')) {
-                $cookies.geolocation = region;
+                geolocation = region;
             } else {
-                $cookies.geolocation = {region: region, department: department};
+                geolocation = {region: region, department: department};
             }
+            $cookies.geolocation = JSON.stringify(geolocation);
         },
         getLongitudeLatitude: function (address) {
             var deffered = $q.defer();
-            $http.get('/rest/geolocation/' + encodeURIComponent(address))
+            $http.get('rest/geolocation/' + encodeURIComponent(address))
                 .success(function (response) {
                     deffered.resolve(response);
                 })
@@ -40,7 +42,7 @@ geolocation.factory('Geolocation', function($http, $q, $cookies) {
         },
         saveGeolocation: function (address) {
             var deffered = $q.defer();
-            $http.post('/rest/geolocation', {address: address})
+            $http.post('rest/geolocation', {address: address})
                 .success(function (response) {
                     deffered.resolve(response);
                 })

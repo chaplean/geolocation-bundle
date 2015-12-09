@@ -13,7 +13,7 @@ describe('Geolocation', function() {
     }));
 
     it('get longitude latitude', inject(function() {
-        $httpBackend.when('GET', '/rest/geolocation/1').respond({longitude: -0.5733138, latitude: 44.8435849});
+        $httpBackend.when('GET', 'rest/geolocation/1').respond({longitude: -0.5733138, latitude: 44.8435849});
 
         var geolocation = {};
         Geolocation.getLongitudeLatitude('1')
@@ -27,7 +27,7 @@ describe('Geolocation', function() {
     }));
 
     it('get longitude latitude', inject(function() {
-        $httpBackend.when('GET', '/rest/geolocation/foo').respond(400, {longitude: null, latitude: null});
+        $httpBackend.when('GET', 'rest/geolocation/foo').respond(400, {longitude: null, latitude: null});
 
         var geolocation = {};
         Geolocation.getLongitudeLatitude('foo')
@@ -41,7 +41,7 @@ describe('Geolocation', function() {
     }));
 
     it('save address', inject(function() {
-        $httpBackend.when('POST', '/rest/geolocation', {address: '9 rue de condé, 33000, Bordeaux'}).respond({
+        $httpBackend.when('POST', 'rest/geolocation', {address: '9 rue de condé, 33000, Bordeaux'}).respond({
             floor: 9,
             block1: 'Rue de Condé',
             cityComplement: 'Bordeaux',
@@ -63,7 +63,7 @@ describe('Geolocation', function() {
     }));
 
     it('save address', inject(function() {
-        $httpBackend.when('POST', '/rest/geolocation', {address: '9 rue de condé, 33000, Bordeaux'}).respond(400);
+        $httpBackend.when('POST', 'rest/geolocation', {address: '9 rue de condé, 33000, Bordeaux'}).respond(400);
 
         var address = {};
         Geolocation.saveGeolocation('9 rue de condé, 33000, Bordeaux')
@@ -78,7 +78,7 @@ describe('Geolocation', function() {
     }));
 
     it('get geolocation', inject(function() {
-        $httpBackend.when('GET', '/rest/geolocation').respond({region: 'Aquitaine', department: 'Gironde'});
+        $httpBackend.when('GET', 'rest/geolocation').respond({region: 'Aquitaine', department: 'Gironde'});
 
         var geolocation = {};
         Geolocation.getGeolocation()
@@ -90,10 +90,11 @@ describe('Geolocation', function() {
         $httpBackend.flush();
 
         expect(geolocation).toEqual({region: 'Aquitaine', department: 'Gironde'});
+        expect(JSON.parse($cookies.geolocation)).toEqual({region: 'Aquitaine', department: 'Gironde'});
     }));
 
     it('get geolocation with already cookie', inject(function() {
-        $cookies.geolocation = {region: 'Centre', department: 'Cher'};
+        Geolocation.saveGeolocationCookie({region: 'Centre', department: 'Cher'});
 
         var geolocation = {};
         Geolocation.getGeolocation()

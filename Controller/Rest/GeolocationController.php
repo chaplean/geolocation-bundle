@@ -19,6 +19,35 @@ use Symfony\Component\HttpFoundation\Response;
 class GeolocationController extends FOSRestController
 {
     /**
+     * @Annotations\Get("/geolocation")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function getRegionDepartmentAction(Request $request)
+    {
+        $geolocation = $this->get('chaplean_geolocation.ip_location');
+
+        $city = $geolocation->getCityFromIp($request->getClientIp());
+        if (!empty($city) && count($city->subdivisions) == 2) {
+            $region = $city->subdivisions[0]->names['fr'];
+            $department = $city->subdivisions[1]->names['fr'];
+            $geo = array(
+                'region'     => $region,
+                'department' => $department
+            );
+        } else {
+            $geo = array(
+                'region'     => null,
+                'department' => null
+            );
+        }
+
+        return $this->handleView($this->view($geo));
+    }
+
+    /**
      * Geolocate an address
      *
      * @param string $address The address to geolocate

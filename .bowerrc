@@ -1,4 +1,4 @@
 {
-  "directory": "web/vendor",
+  "directory": "Resources/public/libs",
   "json": "bower.json"
 }

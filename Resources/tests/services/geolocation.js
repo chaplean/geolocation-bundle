@@ -2,12 +2,13 @@
 
 describe('Geolocation', function() {
 
-    var Geolocation, $httpBackend;
+    var Geolocation, $httpBackend, $cookies;
 
     beforeEach(module('chaplean.geolocation', function() {}));
 
     beforeEach(inject(function($injector, _Geolocation_) {
         $httpBackend = $injector.get('$httpBackend');
+        $cookies = $injector.get('$cookies');
         Geolocation = _Geolocation_;
     }));
 
@@ -74,5 +75,38 @@ describe('Geolocation', function() {
         $httpBackend.flush();
 
         expect(address).toEqual(null);
+    }));
+
+    it('get geolocation', inject(function() {
+        $httpBackend.when('GET', '/rest/geolocation').respond({region: 'Aquitaine', department: 'Gironde'});
+
+        var geolocation = {};
+        Geolocation.getGeolocation()
+            .then(function (response) {
+                geolocation = response;
+            }, function (error) {
+                geolocation = error;
+            });
+        $httpBackend.flush();
+
+        expect(geolocation).toEqual({region: 'Aquitaine', department: 'Gironde'});
+    }));
+
+    it('get geolocation with already cookie', inject(function() {
+        $cookies.geolocation = {region: 'Centre', department: 'Cher'};
+
+        var geolocation = {};
+        Geolocation.getGeolocation()
+            .then(function (response) {
+                geolocation = response;
+            }, function (error) {
+                geolocation = error;
+            });
+
+        try {
+            $httpBackend.flush();
+        } catch (e) {}
+
+        expect(geolocation).toEqual({region: 'Centre', department: 'Cher'});
     }));
 });

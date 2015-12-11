@@ -92,6 +92,22 @@ class GeolocationControllerTest extends LogicalTest
     /**
      * @return void
      */
+    public function testGetLongitudeLatitudeActionWithNotFound()
+    {
+        $this->ivoryGeocoderMock->shouldReceive('geocode')
+            ->andReturn(new GeocoderResponse(array(), 'ZERO_RESULTS'));
+
+        $this->client->request('GET', '/rest/geolocation/' . urlencode(', ,'));
+
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(404, $response->getStatusCode());
+        $this->assertEquals('"Address not found"', $response->getContent());
+    }
+
+    /**
+     * @return void
+     */
     public function testSaveAddressAction()
     {
         $this->ivoryGeocoderMock->shouldReceive('geocode')
@@ -130,12 +146,26 @@ class GeolocationControllerTest extends LogicalTest
         $response = json_decode($response->getContent(), true);
 
         $this->assertEquals(1, $response['id']);
-        $this->assertEquals('Rue de Condé', $response['block1']);
+        $this->assertEquals('9 Rue de Condé', $response['block1']);
         $this->assertEquals(null, $response['block2']);
         $this->assertEquals(null, $response['block3']);
-        $this->assertEquals('9', $response['floor']);
         $this->assertEquals('Bordeaux', $response['city']);
         $this->assertEquals('33000', $response['zipcode']);
+    }
+
+    /**
+     * @return void
+     */
+    public function testSaveAddressNotFoundAction()
+    {
+        $this->ivoryGeocoderMock->shouldReceive('geocode')
+            ->andReturn(new GeocoderResponse(array(), 'ZERO_RESULTS'));
+
+        $this->client->request('POST', '/rest/geolocation', array('address' => ', ,'));
+
+        $response = $this->client->getResponse();
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals('"Address not found"', $response->getContent());
     }
 
     /**

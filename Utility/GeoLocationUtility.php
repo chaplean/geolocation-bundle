@@ -57,15 +57,16 @@ class GeoLocationUtility
 
         $address = new Address();
 
+        $block1 = '';
         foreach ($result->getAddressComponents() as $addressComponent) {
             list($value, $type) = $this->getAddressComponement($addressComponent);
 
             switch ($type) {
                 case 'street_number':
-                    $address->setFloor($value);
+                    $block1 .= $value . ' ';
                     break;
                 case 'route':
-                    $address->setBlock1($value);
+                    $address->setBlock1($block1 . $value);
                     break;
                 case 'locality':
                     $address->setCity($value);

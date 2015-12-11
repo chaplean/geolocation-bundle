@@ -22,7 +22,7 @@ geolocation.factory('Geolocation', function($http, $q, $cookies) {
         },
         saveGeolocationCookie: function (region, department) {
             var geolocation;
-            if (typeof region == 'object' && region.hasOwnProperty('region') && region.hasOwnProperty('department')) {
+            if (region != null && typeof region == 'object' && region.hasOwnProperty('region') && region.hasOwnProperty('department')) {
                 geolocation = region;
             } else {
                 geolocation = {region: region, department: department};

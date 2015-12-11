@@ -130,8 +130,7 @@ class GeoLocationUtilityTest extends LogicalTest
         $address = $this->geocoder->getAddress('9 rue de condé, 33000, Bordeaux');
 
         $this->assertInstanceOf(Address::class, $address);
-        $this->assertEquals('9', $address->getFloor());
-        $this->assertEquals('Rue de Condé', $address->getBlock1());
+        $this->assertEquals('9 Rue de Condé', $address->getBlock1());
         $this->assertEquals('33000', $address->getZipcode());
         $this->assertEquals('Bordeaux', $address->getCity());
     }

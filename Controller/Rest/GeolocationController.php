@@ -60,7 +60,11 @@ class GeolocationController extends FOSRestController
     {
         $geocoder = $this->get('chaplean_geolocation.geolocation');
 
-        $location = $geocoder->getLongitudeLatitudeByAddress($address);
+        try {
+            $location = $geocoder->getLongitudeLatitudeByAddress($address);
+        } catch (\Exception $e) {
+            return $this->handleView($this->view('Address not found', 404));
+        }
 
         return $this->handleView($this->view($location));
     }
@@ -80,7 +84,11 @@ class GeolocationController extends FOSRestController
 
         $geocoder = $this->get('chaplean_geolocation.geolocation');
 
-        $address = $geocoder->getAddress($address);
+        try {
+            $address = $geocoder->getAddress($address);
+        } catch (\Exception $e) {
+            return $this->handleView($this->view('Address not found', 400));
+        }
 
         if (!empty($address)) {
             $em = $this->getDoctrine()->getManager();

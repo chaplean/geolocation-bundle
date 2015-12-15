@@ -24,7 +24,7 @@
     ],
     "require": {
         "php": ">=5.5.9",
-        "symfony/symfony": "2.7.*",
+        "symfony/symfony": "2.8.*",
         "doctrine/orm": "^2.4.8",
         "doctrine/doctrine-bundle": "~1.4",
         "symfony/assetic-bundle": "~2.3",
@@ -41,7 +41,7 @@
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3",
-        "chaplean/unit-bundle": "dev-dev",
+        "chaplean/unit-bundle": "2.0.*",
         "chaplean/coding-standard": "1.1.*"
     },
     "scripts": {

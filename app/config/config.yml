@@ -75,9 +75,6 @@ doctrine:
         auto_generate_proxy_classes: "%kernel.debug%"
         auto_mapping: true
 
-chaplean_geolocation:
-    api_key: "dlkzjlkdjklzejkljd"
-
 fos_rest:
     routing_loader:
         default_format: json

@@ -41,7 +41,7 @@
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3",
-        "chaplean/unit-bundle": "2.0.*",
+        "chaplean/unit-bundle": "^2.0",
         "chaplean/coding-standard": "1.1.*"
     },
     "scripts": {

@@ -7,3 +7,4 @@ parameters:
     sass.bin: /usr/bin/sass
     ruby.bin: /usr/bin/ruby
     compass.bin: /usr/bin/compass
+    chaplean_geolocation.api_key: azer

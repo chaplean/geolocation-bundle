@@ -1,3 +1,6 @@
+parameters:
+    google_map.api_key: %chaplean_geolocation.api_key%
+
 ivory_google_map:
     geocoder:
         # Enable the service

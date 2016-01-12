@@ -18,7 +18,14 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $treeBuilder->root('chaplean_geolocation');
+        $rootNode = $treeBuilder->root('chaplean_geolocation');
+
+        $rootNode->children()
+            ->arrayNode('persist_entity')
+                ->children()
+                    ->scalarNode('address')->defaultNull()->end()
+                ->end()
+            ->end();
 
         return $treeBuilder;
     }

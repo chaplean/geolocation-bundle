@@ -2,7 +2,6 @@
 
 namespace Chaplean\Bundle\GeolocationBundle\Utility;
 
-use Chaplean\Bundle\GeolocationBundle\Entity\Address;
 use Ivory\GoogleMap\Services\Geocoding\Geocoder;
 use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderAddressComponent;
 use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderResponse;
@@ -23,11 +22,18 @@ class GeoLocationUtility
     private $geocoder;
 
     /**
-     * @param Geocoder $geocoder
+     * @var array
      */
-    public function __construct(Geocoder $geocoder)
+    private $parameters;
+
+    /**
+     * @param Geocoder $geocoder
+     * @param array    $parameters
+     */
+    public function __construct(Geocoder $geocoder, $parameters)
     {
         $this->geocoder = $geocoder;
+        $this->parameters = $parameters;
     }
 
     /**
@@ -49,13 +55,20 @@ class GeoLocationUtility
     /**
      * @param string $address
      *
-     * @return Address
+     * @return mixed
+     * @throws \Exception
      */
     public function getAddress($address)
     {
+        if (empty($this->parameters['persist_entity']['address'])) {
+            throw new \Exception('Define \'%s\' configuration, if you want use Address like a class !');
+        }
+
         $result = $this->geocode($address);
 
-        $address = new Address();
+        $class = $this->parameters['persist_entity']['address'];
+        /** @var mixed $address */
+        $address = new $class();
 
         $block1 = '';
         foreach ($result->getAddressComponents() as $addressComponent) {
@@ -79,7 +92,6 @@ class GeoLocationUtility
 
         $address->setLongitude($result->getGeometry()->getLocation()->getLongitude());
         $address->setLatitude($result->getGeometry()->getLocation()->getLatitude());
-        $address->setDateAdd(new \DateTime());
 
         return $address;
     }

@@ -8,113 +8,65 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * Address
  *
- * @ORM\Entity
- * @ORM\Table(name="cl_address")
+ * @ORM\Embeddable
  */
 class Address
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer", options={"unsigned":true})
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @JMS\Groups({"address_id", "address_all"})
-     */
-    private $id;
-
     /**
      * @ORM\Column(type="string", length=200, nullable=false, name="block1")
      *
      * @JMS\Groups({"address_block1", "address_all"})
      */
-    private $block1;
+    protected $block1;
 
     /**
      * @ORM\Column(type="string", length=200, nullable=true, name="block2")
      *
      * @JMS\Groups({"address_block2", "address_all"})
      */
-    private $block2;
+    protected $block2;
 
     /**
      * @ORM\Column(type="string", length=200, nullable=true, name="block3")
      *
      * @JMS\Groups({"address_block3", "address_all"})
      */
-    private $block3;
+    protected $block3;
 
     /**
      * @ORM\Column(type="smallint", nullable=true, name="floor", options={"unsigned":true})
      *
      * @JMS\Groups({"address_floor", "address_all"})
      */
-    private $floor;
+    protected $floor;
 
     /**
      * @ORM\Column(type="string", length=60, nullable=false, name="city_complement")
      *
      * @JMS\Groups({"address_city", "address_all"})
      */
-    private $city;
+    protected $city;
 
     /**
      * @ORM\Column(type="integer", length=5, nullable=true, name="zipcode")
      *
      * @JMS\Groups({"address_zipcode", "address_all"})
      */
-    private $zipcode;
+    protected $zipcode;
 
     /**
      * @ORM\Column(type="decimal", length=10, nullable=true, name="longitude", precision=10, scale=7)
      *
      * @JMS\Groups({"address_longitude", "address_all"})
      */
-    private $longitude;
+    protected $longitude;
 
     /**
      * @ORM\Column(type="decimal", length=10, nullable=true, name="latitude", scale=7, precision=10)
      *
      * @JMS\Groups({"address_latitude", "address_all"})
      */
-    private $latitude;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=false, name="date_add")
-     *
-     * @JMS\Groups({"address_date_add", "address_all"})
-     */
-    private $dateAdd;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true, name="date_update")
-     *
-     * @JMS\Groups({"address_date_update", "address_all"})
-     */
-    private $dateUpdate;
-
-    /**
-     * Get id.
-     *
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set id.
-     *
-     * @param mixed $id
-     *
-     * @return Address
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
+    protected $latitude;
 
     /**
      * Get block1.
@@ -304,54 +256,6 @@ class Address
     public function setLatitude($latitude)
     {
         $this->latitude = $latitude;
-
-        return $this;
-    }
-
-    /**
-     * Get dateAdd.
-     *
-     * @return mixed
-     */
-    public function getDateAdd()
-    {
-        return $this->dateAdd;
-    }
-
-    /**
-     * Set dateAdd.
-     *
-     * @param mixed $dateAdd
-     *
-     * @return Address
-     */
-    public function setDateAdd($dateAdd)
-    {
-        $this->dateAdd = $dateAdd;
-
-        return $this;
-    }
-
-    /**
-     * Get dateUpdate.
-     *
-     * @return mixed
-     */
-    public function getDateUpdate()
-    {
-        return $this->dateUpdate;
-    }
-
-    /**
-     * Set dateUpdate.
-     *
-     * @param mixed $dateUpdate
-     *
-     * @return Address
-     */
-    public function setDateUpdate($dateUpdate)
-    {
-        $this->dateUpdate = $dateUpdate;
 
         return $this;
     }

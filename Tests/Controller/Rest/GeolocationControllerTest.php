@@ -2,6 +2,7 @@
 
 namespace Chaplean\Bundle\GeolocationBundle\Tests\Controller\Rest;
 
+use Chaplean\Bundle\GeolocationBundle\Entity\Address;
 use Chaplean\Bundle\UnitBundle\Test\LogicalTest;
 use Geocoder\Geocoder;
 use Ivory\GoogleMap\Base\Bound;
@@ -10,9 +11,9 @@ use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderAddressComponent;
 use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderGeometry;
 use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderResponse;
 use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderResult;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Client;
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * GeolocationControllerTest.php.
@@ -200,5 +201,31 @@ class GeolocationControllerTest extends LogicalTest
         $this->assertTrue(array_key_exists('department', $response));
         $this->assertNull($response['region']);
         $this->assertNull($response['department']);
+    }
+}
+
+/**
+ * Class DummyAddress.
+ *
+ * @ORM\Entity
+ * @ORM\Table(name="cl_dummy_address")
+ */
+class DummyAddress extends Address
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer", options={"unsigned":true})
+     * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @JMS\Groups({"address_id", "address_all"})
+     */
+    private $id;
+
+    /**
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }

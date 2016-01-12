@@ -73,7 +73,23 @@ doctrine:
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
-        auto_mapping: true
+        default_entity_manager: address
+        entity_managers:
+            address:
+                mappings:
+                    ChapleanGeolocationBundle: ~
+                    DummyAddress:
+                        type:      annotation
+                        dir:       %kernel.root_dir%/../Tests/Controller/Rest
+                        prefix:    Chaplean\Bundle\GeolocationBundle\Tests\Controller\Rest\DummyAddress
+                        alias:     DummyAddress
+                        is_bundle: false
+                    EmbeddableAddress:
+                        type:      annotation
+                        dir:       %kernel.root_dir%/../Tests/
+                        prefix:    Chaplean\Bundle\GeolocationBundle\Tests\EmbeddableAddress
+                        alias:     EmbeddableAddress
+                        is_bundle: false
 
 fos_rest:
     routing_loader:
@@ -102,3 +118,7 @@ fos_rest:
             html: false
     serializer:
         serialize_null: true
+
+chaplean_geolocation:
+    persist_entity:
+        address: Chaplean\Bundle\GeolocationBundle\Tests\Controller\Rest\DummyAddress

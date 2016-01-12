@@ -23,14 +23,30 @@ class ChapleanGeolocationExtension extends Extension
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
-        $this->processConfiguration($configuration, $configs);
+        $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
-//        $container->setParameter('chaplean_geolocation', $config);
-//        foreach ($config as $key => $parameter) {
-//            $container->setParameter('chaplean_geolocation.' . $key, $parameter);
-//        }
+        $container->setParameter('chaplean_geolocation', $config);
+        $this->setParameters($container, 'chaplean_geolocation', $config);
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param string           $name
+     * @param array            $config
+     *
+     * @return void
+     */
+    public function setParameters($container, $name, $config)
+    {
+        foreach ($config as $key => $parameter) {
+            $container->setParameter($name . '.' . $key, $parameter);
+
+            if (is_array($parameter)) {
+                $this->setParameters($container, $name . '.' . $key, $parameter);
+            }
+        }
     }
 }

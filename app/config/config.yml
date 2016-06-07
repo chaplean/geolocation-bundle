@@ -81,13 +81,13 @@ doctrine:
                     DummyAddress:
                         type:      annotation
                         dir:       %kernel.root_dir%/../Tests/Controller/Rest
-                        prefix:    Chaplean\Bundle\GeolocationBundle\Tests\Controller\Rest\DummyAddress
+                        prefix:    Tests\Chaplean\Bundle\GeolocationBundle\Controller\Rest\DummyAddress
                         alias:     DummyAddress
                         is_bundle: false
                     EmbeddableAddress:
                         type:      annotation
                         dir:       %kernel.root_dir%/../Tests/
-                        prefix:    Chaplean\Bundle\GeolocationBundle\Tests\EmbeddableAddress
+                        prefix:    Tests\Chaplean\Bundle\GeolocationBundle\EmbeddableAddress
                         alias:     EmbeddableAddress
                         is_bundle: false
 
@@ -121,4 +121,4 @@ fos_rest:
 
 chaplean_geolocation:
     persist_entity:
-        address: Chaplean\Bundle\GeolocationBundle\Tests\Controller\Rest\DummyAddress
+        address: Tests\Chaplean\Bundle\GeolocationBundle\Controller\Rest\DummyAddress

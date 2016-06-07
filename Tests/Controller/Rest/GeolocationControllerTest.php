@@ -1,6 +1,6 @@
 <?php
 
-namespace Chaplean\Bundle\GeolocationBundle\Tests\Controller\Rest;
+namespace Tests\Chaplean\Bundle\GeolocationBundle\Controller\Rest;
 
 use Chaplean\Bundle\GeolocationBundle\Entity\Address;
 use Chaplean\Bundle\UnitBundle\Test\LogicalTest;
@@ -33,14 +33,6 @@ class GeolocationControllerTest extends LogicalTest
      * @var Geocoder
      */
     private $ivoryGeocoderMock;
-
-    /**
-     * @return void
-     */
-    public static function setUpBeforeClass()
-    {
-        parent::setUpBeforeClass();
-    }
 
     /**
      * @return void
@@ -85,9 +77,9 @@ class GeolocationControllerTest extends LogicalTest
         $response = $this->client->getResponse();
         $response = json_decode($response->getContent(), true);
 
-        $this->assertEquals(array('longitude', 'latitude'), array_keys($response));
-        $this->assertEquals(-0.5733138, round($response['longitude'], 7));
-        $this->assertEquals(44.8435849, round($response['latitude'], 7));
+        static::assertEquals(array('longitude', 'latitude'), array_keys($response));
+        static::assertEquals(-0.5733138, round($response['longitude'], 7));
+        static::assertEquals(44.8435849, round($response['latitude'], 7));
     }
 
     /**
@@ -102,8 +94,8 @@ class GeolocationControllerTest extends LogicalTest
 
         $response = $this->client->getResponse();
 
-        $this->assertEquals(404, $response->getStatusCode());
-        $this->assertEquals('"Address not found"', $response->getContent());
+        static::assertEquals(404, $response->getStatusCode());
+        static::assertEquals('"Address not found"', $response->getContent());
     }
 
     /**
@@ -146,12 +138,12 @@ class GeolocationControllerTest extends LogicalTest
         $response = $this->client->getResponse();
         $response = json_decode($response->getContent(), true);
 
-        $this->assertEquals(1, $response['id']);
-        $this->assertEquals('9 Rue de Condé', $response['block1']);
-        $this->assertEquals(null, $response['block2']);
-        $this->assertEquals(null, $response['block3']);
-        $this->assertEquals('Bordeaux', $response['city']);
-        $this->assertEquals('33000', $response['zipcode']);
+        static::assertEquals(1, $response['id']);
+        static::assertEquals('9 Rue de Condé', $response['block1']);
+        static::assertEquals(null, $response['block2']);
+        static::assertEquals(null, $response['block3']);
+        static::assertEquals('Bordeaux', $response['city']);
+        static::assertEquals('33000', $response['zipcode']);
     }
 
     /**
@@ -165,8 +157,8 @@ class GeolocationControllerTest extends LogicalTest
         $this->client->request('POST', '/rest/geolocation', array('address' => ', ,'));
 
         $response = $this->client->getResponse();
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertEquals('"Address not found"', $response->getContent());
+        static::assertEquals(400, $response->getStatusCode());
+        static::assertEquals('"Address not found"', $response->getContent());
     }
 
     /**
@@ -181,10 +173,10 @@ class GeolocationControllerTest extends LogicalTest
         $response = $this->client->getResponse();
         $response = json_decode($response->getContent(), true);
 
-        $this->assertTrue(array_key_exists('region', $response));
-        $this->assertTrue(array_key_exists('department', $response));
-        $this->assertEquals('Aquitaine', $response['region']);
-        $this->assertEquals('Gironde', $response['department']);
+        static::assertTrue(array_key_exists('region', $response));
+        static::assertTrue(array_key_exists('department', $response));
+        static::assertEquals('Aquitaine', $response['region']);
+        static::assertEquals('Gironde', $response['department']);
     }
 
     /**
@@ -197,10 +189,10 @@ class GeolocationControllerTest extends LogicalTest
         $response = $this->client->getResponse();
         $response = json_decode($response->getContent(), true);
 
-        $this->assertTrue(array_key_exists('region', $response));
-        $this->assertTrue(array_key_exists('department', $response));
-        $this->assertNull($response['region']);
-        $this->assertNull($response['department']);
+        static::assertTrue(array_key_exists('region', $response));
+        static::assertTrue(array_key_exists('department', $response));
+        static::assertNull($response['region']);
+        static::assertNull($response['department']);
     }
 }
 

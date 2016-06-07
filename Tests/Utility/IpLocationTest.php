@@ -1,6 +1,6 @@
 <?php
 
-namespace Chaplean\Bundle\GeolocationBundle\Tests\Utility;
+namespace Tests\Chaplean\Bundle\GeolocationBundle\Utility;
 
 use Chaplean\Bundle\GeolocationBundle\Utility\IpLocation;
 use Chaplean\Bundle\UnitBundle\Test\LogicalTest;

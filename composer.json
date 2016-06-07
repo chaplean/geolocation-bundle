@@ -11,14 +11,15 @@
     ],
     "autoload": {
         "psr-4": {
-            "Chaplean\\Bundle\\GeolocationBundle\\": ""
+            "Chaplean\\Bundle\\GeolocationBundle\\": "",
+            "Tests\\": "Tests"
         },
         "classmap": [ "app/AppKernel.php"]
     },
     "repositories": [
         {
             "type": "composer",
-            "url": "http://satis.chaplean.com"
+            "url": "https://satis.chaplean.com"
         }
     ],
     "require": {
@@ -40,7 +41,7 @@
     },
     "require-dev": {
         "sensio/generator-bundle": "~3.0",
-        "chaplean/unit-bundle": "^2.0",
+        "chaplean/unit-bundle": "^3.0",
         "chaplean/coding-standard": "1.1.*"
     },
     "scripts": {

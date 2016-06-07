@@ -1,6 +1,6 @@
 <?php
 
-namespace Chaplean\Bundle\GeolocationBundle\Tests;
+namespace Tests\Chaplean\Bundle\GeolocationBundle;
 
 use Chaplean\Bundle\GeolocationBundle\Entity\Address;
 use Chaplean\Bundle\UnitBundle\Test\LogicalTest;
@@ -40,7 +40,7 @@ class EmbeddableAddressTest extends LogicalTest
         $this->em->flush();
 
         /** @var EmbeddableAddress[] $newEmbeddableAddress */
-        $newEmbeddableAddress = $this->em->getRepository('Chaplean\Bundle\GeolocationBundle\Tests\EmbeddableAddress')->findAll();
+        $newEmbeddableAddress = $this->em->getRepository('Tests\Chaplean\Bundle\GeolocationBundle\EmbeddableAddress')->findAll();
 
         $this->assertCount(1, $newEmbeddableAddress);
         $this->assertEquals('toto', $newEmbeddableAddress[0]->getAddress()->getBlock1());

@@ -3,7 +3,8 @@
 namespace Tests\Chaplean\Bundle\GeolocationBundle\Controller\Rest;
 
 use Chaplean\Bundle\GeolocationBundle\Entity\Address;
-use Chaplean\Bundle\UnitBundle\Test\LogicalTest;
+use Chaplean\Bundle\UnitBundle\Test\LogicalTestCase;
+use FOS\RestBundle\Util\Codes;
 use Geocoder\Geocoder;
 use Ivory\GoogleMap\Base\Bound;
 use Ivory\GoogleMap\Base\Coordinate;
@@ -22,7 +23,7 @@ use JMS\Serializer\Annotation as JMS;
  * @copyright 2014 - 2015 Chaplean (http://www.chaplean.com)
  * @since     1.0.0
  */
-class GeolocationControllerTest extends LogicalTest
+class GeolocationControllerTest extends LogicalTestCase
 {
     /**
      * @var Client
@@ -39,6 +40,8 @@ class GeolocationControllerTest extends LogicalTest
      */
     public function setUp()
     {
+        parent::setUp();
+
         $this->client = static::createClient();
 
         $this->ivoryGeocoderMock = \Mockery::mock('Ivory\GoogleMap\Services\Geocoding\Geocoder');
@@ -94,7 +97,7 @@ class GeolocationControllerTest extends LogicalTest
 
         $response = $this->client->getResponse();
 
-        static::assertEquals(404, $response->getStatusCode());
+        static::assertEquals(Codes::HTTP_NOT_FOUND, $response->getStatusCode());
         static::assertEquals('"Address not found"', $response->getContent());
     }
 
@@ -136,14 +139,15 @@ class GeolocationControllerTest extends LogicalTest
         $this->client->request('POST', '/rest/geolocation', array('address' => '9 rue de Condé, 33000, Bordeaux'));
 
         $response = $this->client->getResponse();
-        $response = json_decode($response->getContent(), true);
+        $content = json_decode($response->getContent(), true);
 
-        static::assertEquals(1, $response['id']);
-        static::assertEquals('9 Rue de Condé', $response['block1']);
-        static::assertEquals(null, $response['block2']);
-        static::assertEquals(null, $response['block3']);
-        static::assertEquals('Bordeaux', $response['city']);
-        static::assertEquals('33000', $response['zipcode']);
+        static::assertEquals(Codes::HTTP_OK, $response->getStatusCode());
+        static::assertEquals(1, $content['id']);
+        static::assertEquals('9 Rue de Condé', $content['block1']);
+        static::assertEquals(null, $content['block2']);
+        static::assertEquals(null, $content['block3']);
+        static::assertEquals('Bordeaux', $content['city']);
+        static::assertEquals('33000', $content['zipcode']);
     }
 
     /**
@@ -157,7 +161,8 @@ class GeolocationControllerTest extends LogicalTest
         $this->client->request('POST', '/rest/geolocation', array('address' => ', ,'));
 
         $response = $this->client->getResponse();
-        static::assertEquals(400, $response->getStatusCode());
+
+        static::assertEquals(Codes::HTTP_BAD_REQUEST, $response->getStatusCode());
         static::assertEquals('"Address not found"', $response->getContent());
     }
 
@@ -171,12 +176,12 @@ class GeolocationControllerTest extends LogicalTest
         ));
 
         $response = $this->client->getResponse();
-        $response = json_decode($response->getContent(), true);
+        $content = json_decode($response->getContent(), true);
 
-        static::assertTrue(array_key_exists('region', $response));
-        static::assertTrue(array_key_exists('department', $response));
-        static::assertEquals('Aquitaine', $response['region']);
-        static::assertEquals('Gironde', $response['department']);
+        static::assertTrue(array_key_exists('region', $content));
+        static::assertTrue(array_key_exists('department', $content));
+        static::assertEquals('Aquitaine', $content['region']);
+        static::assertEquals('Gironde', $content['department']);
     }
 
     /**
@@ -187,12 +192,12 @@ class GeolocationControllerTest extends LogicalTest
         $this->client->request('GET', '/rest/geolocation');
 
         $response = $this->client->getResponse();
-        $response = json_decode($response->getContent(), true);
+        $content = json_decode($response->getContent(), true);
 
-        static::assertTrue(array_key_exists('region', $response));
-        static::assertTrue(array_key_exists('department', $response));
-        static::assertNull($response['region']);
-        static::assertNull($response['department']);
+        static::assertTrue(array_key_exists('region', $content));
+        static::assertTrue(array_key_exists('department', $content));
+        static::assertNull($content['region']);
+        static::assertNull($content['department']);
     }
 }
 

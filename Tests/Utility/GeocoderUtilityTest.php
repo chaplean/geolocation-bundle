@@ -4,7 +4,7 @@ namespace Tests\Chaplean\Bundle\GeolocationBundle\Utility;
 
 use Chaplean\Bundle\GeolocationBundle\Entity\Address;
 use Chaplean\Bundle\GeolocationBundle\Utility\GeoLocationUtility;
-use Chaplean\Bundle\UnitBundle\Test\LogicalTest;
+use Chaplean\Bundle\UnitBundle\Test\LogicalTestCase;
 use Ivory\GoogleMap\Base\Bound;
 use Ivory\GoogleMap\Base\Coordinate;
 use Ivory\GoogleMap\Services\Geocoding\Geocoder;
@@ -12,6 +12,7 @@ use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderAddressComponent;
 use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderGeometry;
 use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderResponse;
 use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderResult;
+use Mockery\MockInterface;
 
 /**
  * GeocoderUtilityTest.php.
@@ -20,7 +21,7 @@ use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderResult;
  * @copyright 2014 - 2015 Chaplean (http://www.chaplean.com)
  * @since     1.0.0
  */
-class GeoLocationUtilityTest extends LogicalTest
+class GeoLocationUtilityTest extends LogicalTestCase
 {
     /**
      * @var GeoLocationUtility
@@ -28,17 +29,28 @@ class GeoLocationUtilityTest extends LogicalTest
     private $geocoder;
 
     /**
-     * @var Geocoder
+     * @var Geocoder|MockInterface
      */
-    private $ivoryGeocoderMock;
+    private static $ivoryGeocoderMock;
+
+    /**
+     * @return void
+     */
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+
+        self::$ivoryGeocoderMock = \Mockery::mock('Ivory\GoogleMap\Services\Geocoding\Geocoder');
+    }
 
     /**
      * @return void
      */
     public function setUp()
     {
-        $this->ivoryGeocoderMock = \Mockery::mock('Ivory\GoogleMap\Services\Geocoding\Geocoder');
-        $this->getContainer()->set('ivory_google_map.geocoder', $this->ivoryGeocoderMock);
+        parent::setUp();
+
+        $this->getContainer()->set('ivory_google_map.geocoder', self::$ivoryGeocoderMock);
         $this->geocoder = $this->getContainer()->get('chaplean_geolocation.geolocation');
     }
 
@@ -48,7 +60,8 @@ class GeoLocationUtilityTest extends LogicalTest
      */
     public function testGetLongitudeLatitudeByAddressWithGoodAddress()
     {
-        $this->ivoryGeocoderMock->shouldReceive('geocode')
+        self::$ivoryGeocoderMock->shouldReceive('geocode')
+            ->once()
             ->andReturn(new GeocoderResponse(array(
                 new GeocoderResult(
                     array(),
@@ -82,7 +95,8 @@ class GeoLocationUtilityTest extends LogicalTest
      */
     public function testfindLongitudeLatitudeByAddressWithGoodAddress()
     {
-        $this->ivoryGeocoderMock->shouldReceive('geocode')
+        self::$ivoryGeocoderMock->shouldReceive('geocode')
+            ->once()
             ->andReturn(new GeocoderResponse(array(
                 new GeocoderResult(
                     array(),
@@ -123,9 +137,11 @@ class GeoLocationUtilityTest extends LogicalTest
      */
     public function testfindLongitudeLatitudeByAddressWithSubAddressNotFound()
     {
-        $this->ivoryGeocoderMock->shouldReceive('geocode')
+        self::$ivoryGeocoderMock->shouldReceive('geocode')
+            ->once()
             ->andReturn(new GeocoderResponse(array(), 'ZERO_RESULTS'))->once();
-        $this->ivoryGeocoderMock->shouldReceive('geocode')
+        self::$ivoryGeocoderMock->shouldReceive('geocode')
+            ->once()
             ->andReturn(new GeocoderResponse(array(
                 new GeocoderResult(
                     array(),
@@ -167,7 +183,8 @@ class GeoLocationUtilityTest extends LogicalTest
      */
     public function testGetLongitudeLatitudeByAddressWithBadAddress()
     {
-        $this->ivoryGeocoderMock->shouldReceive('geocode')
+        self::$ivoryGeocoderMock->shouldReceive('geocode')
+            ->once()
             ->andReturn(new GeocoderResponse(array(), 'ZERO_RESULTS'));
 
         /** @var GeocoderResponse $response */
@@ -182,7 +199,8 @@ class GeoLocationUtilityTest extends LogicalTest
      */
     public function testGetLongitudeLatitudeByAddressWithNotFoundAddress()
     {
-        $this->ivoryGeocoderMock->shouldReceive('geocode')
+        self::$ivoryGeocoderMock->shouldReceive('geocode')
+            ->twice()
             ->andReturn(new GeocoderResponse(array(), 'ZERO_RESULTS'));
 
         $address = new Address();
@@ -196,7 +214,8 @@ class GeoLocationUtilityTest extends LogicalTest
      */
     public function testGetAddress()
     {
-        $this->ivoryGeocoderMock->shouldReceive('geocode')
+        self::$ivoryGeocoderMock->shouldReceive('geocode')
+            ->once()
             ->andReturn(new GeocoderResponse(array(
                 new GeocoderResult(
                     array(
@@ -233,22 +252,4 @@ class GeoLocationUtilityTest extends LogicalTest
         static::assertEquals('33000', $address->getZipcode());
         static::assertEquals('Bordeaux', $address->getCity());
     }
-//    public function testFindLongitudeLatitude()
-//    {
-////        $address = new Address();
-////        $address->setBlock1('Tour Atlantique');
-////        $address->setBlock2('1, place de la pyramide ');
-////        $address->setCity('Paris La Défense');
-////        $address->setZipcode('92911');
-////
-////        $result = $this->geocoder->findLongitudeLatitudeByAddress($address);
-////
-////        $address = new Address();
-////        $address->setBlock1('17 rue du Bois Briand');
-////        $address->setBlock2('CS 83589');
-////        $address->setCity('NANTES cedex 3');
-////        $address->setZipcode('44335');
-////
-////        $result = $this->geocoder->findLongitudeLatitudeByAddress($address);
-//    }
 }

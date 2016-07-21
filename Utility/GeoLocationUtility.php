@@ -15,7 +15,6 @@ use Monolog\Logger;
  * @copyright 2014 - 2015 Chaplean (http://www.chaplean.com)
  * @since     1.18.0
  */
-
 class GeoLocationUtility
 {
     /**
@@ -38,7 +37,7 @@ class GeoLocationUtility
      * @param Logger   $logger
      * @param array    $parameters
      */
-    public function __construct(Geocoder $geocoder, $logger, $parameters)
+    public function __construct(Geocoder $geocoder, Logger $logger, array $parameters)
     {
         $this->geocoder = $geocoder;
         $this->parameters = $parameters;
@@ -67,36 +66,25 @@ class GeoLocationUtility
      * @return null|array
      * @throws \Exception
      */
-    public function findLongitudeLatitudeByAddress($address)
+    public function findLongitudeLatitudeByAddress(Address $address)
     {
         $city = preg_replace('/(C|c)(E|e)(D|d)(E|e)(X|x)\s\d*/', '', $address->getCity());
 
         $search = sprintf('%s %s %s', $address->getBlock1(), $address->getZipcode(), $city);
         try {
-            $result = $this->geocode($search);
-            return array(
-                'longitude' => $result->getGeometry()->getLocation()->getLongitude(),
-                'latitude'  => $result->getGeometry()->getLocation()->getLatitude(),
-            );
+            return $this->getLongitudeLatitudeByAddress($search);
         } catch (\Exception $e) {
             $this->logger->warn(sprintf('[ChapleanGeolocationBundle] (1) Not found with \'%s\'', $search));
         }
 
         $search = sprintf('%s %s %s', $address->getBlock2(), $address->getZipcode(), $city);
         try {
-            $result = $this->geocode($search);
-            return array(
-                'longitude' => $result->getGeometry()->getLocation()->getLongitude(),
-                'latitude'  => $result->getGeometry()->getLocation()->getLatitude(),
-            );
+            return $this->getLongitudeLatitudeByAddress($search);
         } catch (\Exception $e) {
             $this->logger->warn(sprintf('[ChapleanGeolocationBundle] (2) Not found with \'%s\'', $search));
-            $exception = get_class($e);
-            throw new $exception($e->getMessage());
+            throw $e;
         }
     }
-
-//    public function
 
     /**
      * @param string $address
@@ -169,7 +157,7 @@ class GeoLocationUtility
      *
      * @return array
      */
-    private function getAddressComponement($geocoderAddressComponement)
+    private function getAddressComponement(GeocoderAddressComponent $geocoderAddressComponement)
     {
         $types = $geocoderAddressComponement->getTypes();
         $type = array_shift($types);

@@ -1,0 +1,12 @@
+# Commands to execute in CodeShip
+- type: serial
+  services:
+  - application
+  steps:
+  - command: composer install --prefer-dist --no-interaction
+  - command: cp ./app/config/parameters.yml.dist ./app/config/parameters.yml
+  - command: cp ./phpunit.xml.dist ./phpunit-default.xml
+  - command: chmod -R +x ./bin/
+  - command: ./bin/phpunit.sh default mysql
+  - command: php bin/coveralls
+  - command: ./bin/satis-build.sh chaplean/geolocation-bundle

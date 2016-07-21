@@ -3,7 +3,7 @@
 namespace Tests\Chaplean\Bundle\GeolocationBundle\Utility;
 
 use Chaplean\Bundle\GeolocationBundle\Utility\IpLocation;
-use Chaplean\Bundle\UnitBundle\Test\LogicalTest;
+use Chaplean\Bundle\UnitBundle\Test\LogicalTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * @copyright 2014 - 2015 Chaplean (http://www.chaplean.com)
  * @since     v1.0.0
  */
-class IpLocationTest extends LogicalTest
+class IpLocationTest extends LogicalTestCase
 {
     /**
      * @var IpLocation $location
@@ -31,6 +31,8 @@ class IpLocationTest extends LogicalTest
      */
     public function setUp()
     {
+        parent::setUp();
+
         $this->requestStack = \Mockery::mock('Symfony\Component\HttpFoundation\RequestStack');
         $this->getContainer()->set('request_stack', $this->requestStack);
         $this->location = $this->getContainer()->get('chaplean_geolocation.ip_location');

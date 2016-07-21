@@ -2,9 +2,11 @@
 
 namespace Chaplean\Bundle\GeolocationBundle\Utility;
 
+use Chaplean\Bundle\GeolocationBundle\Entity\Address;
 use Ivory\GoogleMap\Services\Geocoding\Geocoder;
 use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderAddressComponent;
 use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderResponse;
+use Monolog\Logger;
 
 /**
  * GeocoderUtility.php.
@@ -13,7 +15,6 @@ use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderResponse;
  * @copyright 2014 - 2015 Chaplean (http://www.chaplean.com)
  * @since     1.18.0
  */
-
 class GeoLocationUtility
 {
     /**
@@ -27,13 +28,20 @@ class GeoLocationUtility
     private $parameters;
 
     /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
      * @param Geocoder $geocoder
+     * @param Logger   $logger
      * @param array    $parameters
      */
-    public function __construct(Geocoder $geocoder, $parameters)
+    public function __construct(Geocoder $geocoder, Logger $logger, array $parameters)
     {
         $this->geocoder = $geocoder;
         $this->parameters = $parameters;
+        $this->logger = $logger;
     }
 
     /**
@@ -50,6 +58,32 @@ class GeoLocationUtility
             'longitude' => $result->getGeometry()->getLocation()->getLongitude(),
             'latitude'  => $result->getGeometry()->getLocation()->getLatitude(),
         );
+    }
+
+    /**
+     * @param Address $address
+     *
+     * @return null|array
+     * @throws \Exception
+     */
+    public function findLongitudeLatitudeByAddress(Address $address)
+    {
+        $city = preg_replace('/(C|c)(E|e)(D|d)(E|e)(X|x)\s\d*/', '', $address->getCity());
+
+        $search = sprintf('%s %s %s', $address->getBlock1(), $address->getZipcode(), $city);
+        try {
+            return $this->getLongitudeLatitudeByAddress($search);
+        } catch (\Exception $e) {
+            $this->logger->warn(sprintf('[ChapleanGeolocationBundle] (1) Not found with \'%s\'', $search));
+        }
+
+        $search = sprintf('%s %s %s', $address->getBlock2(), $address->getZipcode(), $city);
+        try {
+            return $this->getLongitudeLatitudeByAddress($search);
+        } catch (\Exception $e) {
+            $this->logger->warn(sprintf('[ChapleanGeolocationBundle] (2) Not found with \'%s\'', $search));
+            throw $e;
+        }
     }
 
     /**
@@ -109,7 +143,7 @@ class GeoLocationUtility
 
         $results = $response->getResults();
 
-        if ($response->getStatus() != 'OK') {
+        if ($response->getStatus() !== 'OK') {
             throw new \Exception($response->getStatus());
         } elseif (count($results) > 1) {
             throw new \Exception(count($results));
@@ -123,7 +157,7 @@ class GeoLocationUtility
      *
      * @return array
      */
-    private function getAddressComponement($geocoderAddressComponement)
+    private function getAddressComponement(GeocoderAddressComponent $geocoderAddressComponement)
     {
         $types = $geocoderAddressComponement->getTypes();
         $type = array_shift($types);

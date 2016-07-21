@@ -1,37 +1,35 @@
 {
     "name": "chaplean/geolocation-bundle",
-    "description": "Geolocation Tools",
-    "type": "symfony-bundle",
     "license": "MIT",
+    "type": "symfony-bundle",
+    "description": "Geolocation Tools",
     "authors": [
         {
             "name": "Chaplean",
-            "homepage": "http://chaplean.com/"
+            "homepage": "http://www.chaplean.com"
         }
     ],
     "autoload": {
         "psr-4": {
-            "Chaplean\\Bundle\\GeolocationBundle\\": ""
-        },
-        "classmap": [ "app/AppKernel.php"]
+            "Chaplean\\Bundle\\GeolocationBundle\\": "",
+            "Tests\\": "Tests"
+        }
     },
     "repositories": [
         {
             "type": "composer",
-            "url": "http://satis.chaplean.com"
+            "url": "https://satis.chaplean.com"
         }
     ],
     "require": {
-        "php": ">=5.5.9",
+        "php": ">=7.0.8",
         "symfony/symfony": "2.8.*",
         "doctrine/orm": "^2.4.8",
         "doctrine/doctrine-bundle": "~1.4",
-        "symfony/assetic-bundle": "~2.3",
         "symfony/swiftmailer-bundle": "~2.3",
         "symfony/monolog-bundle": "~2.4",
         "sensio/distribution-bundle": "~5.0",
-        "sensio/framework-extra-bundle": "^3.0.2",
-        "incenteev/composer-parameter-handler": "~2.0",
+        "symfony/assetic-bundle": "~2.3",
         "cravler/maxmind-geoip-bundle": "^1.0",
         "willdurand/geocoder": "2.8.*",
         "egeloen/google-map-bundle": "~2.2",
@@ -39,34 +37,33 @@
         "jms/serializer-bundle": "^1.1"
     },
     "require-dev": {
-        "sensio/generator-bundle": "~3.0",
-        "chaplean/unit-bundle": "^2.0",
-        "chaplean/coding-standard": "1.1.*"
+        "chaplean/coding-standard": "1.1.*",
+        "chaplean/unit-bundle": "^4.0",
+        "satooshi/php-coveralls": "^1.0"
     },
     "scripts": {
         "post-install-cmd": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
         ],
         "post-update-cmd": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
         ]
     },
     "config": {
         "bin-dir": "bin",
-        "discard-changes": true
+        "platform": {
+            "php": "7.0.8"
+        }
     },
     "extra": {
         "symfony-app-dir": "app",
         "symfony-bin-dir": "bin",
         "symfony-var-dir": "var",
         "symfony-web-dir": "web",
-        "symfony-assets-install": "symlink",
-        "incenteev-parameters": {
-            "file": "app/config/parameters.yml",
-            "keep-outdated": true
-        },
-        "branch-alias": {
-            "dev-master": "2.8-dev"
-        }
+        "symfony-assets-install": "relative"
     }
 }

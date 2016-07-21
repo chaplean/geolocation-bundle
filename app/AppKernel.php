@@ -17,32 +17,33 @@ class AppKernel extends Kernel
      */
     public function registerBundles()
     {
-        return array(
-            new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            new Symfony\Bundle\TwigBundle\TwigBundle(),
-            new Symfony\Bundle\AsseticBundle\AsseticBundle(),
+        $bundles = array(
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
+            new Symfony\Bundle\MonologBundle\MonologBundle(),
+            new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
-            new Symfony\Bundle\MonologBundle\MonologBundle(),
+            new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
+            new Symfony\Bundle\TwigBundle\TwigBundle(),
             new Chaplean\Bundle\UnitBundle\ChapleanUnitBundle(),
             new Liip\FunctionalTestBundle\LiipFunctionalTestBundle(),
+            new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Cravler\MaxMindGeoIpBundle\CravlerMaxMindGeoIpBundle(),
             new Chaplean\Bundle\GeolocationBundle\ChapleanGeolocationBundle(),
             new Ivory\GoogleMapBundle\IvoryGoogleMapBundle(),
             new FOS\RestBundle\FOSRestBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
         );
+
+        return $bundles;
     }
 
     /**
-     * @param LoaderInterface $loader
-     *
-     * @return void
+     * @return string
      */
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function getRootDir()
     {
-        $loader->load(__DIR__ . '/config/config_' . $this->getEnvironment() .'.yml');
+        return __DIR__;
     }
 
     /**
@@ -50,12 +51,7 @@ class AppKernel extends Kernel
      */
     public function getCacheDir()
     {
-        $cacheDir = sys_get_temp_dir() . '/cache/' . $this->getEnvironment();
-        if (!is_dir($cacheDir)) {
-            mkdir($cacheDir, 0777, true);
-        }
-
-        return $cacheDir;
+        return dirname(__DIR__) . '/var/cache/' . $this->getEnvironment();
     }
 
     /**
@@ -63,11 +59,16 @@ class AppKernel extends Kernel
      */
     public function getLogDir()
     {
-        $logDir = sys_get_temp_dir() . '/logs/' . $this->getEnvironment();
-        if (!is_dir($logDir)) {
-            mkdir($logDir, 0777, true);
-        }
+        return dirname(__DIR__) . '/var/logs';
+    }
 
-        return $logDir;
+    /**
+     * @param LoaderInterface $loader Resource loader.
+     *
+     * @return void
+     */
+    public function registerContainerConfiguration(LoaderInterface $loader)
+    {
+        $loader->load(__DIR__ . '/config/config.yml');
     }
 }

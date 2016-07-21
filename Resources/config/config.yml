@@ -1,5 +1,5 @@
 parameters:
-    google_map.api_key: %chaplean_geolocation.api_key%
+    google_map.api_key: '%chaplean_geolocation.api_key%'
 
 ivory_google_map:
     geocoder:
@@ -7,17 +7,13 @@ ivory_google_map:
         enabled: true
 
         # Geocoder class
-        class: "Ivory\GoogleMap\Services\Geocoding\Geocoder"
+        class: Ivory\GoogleMap\Services\Geocoding\Geocoder
         provider:
             # Provider class
-            class: "Ivory\GoogleMap\Services\Geocoding\GeocoderProvider"
+            class: Chaplean\Bundle\GeolocationBundle\Provider\GeocoderProvider
 
             # API key used by the provider
-            # If you set an API key, this paremeter will be the second parameter provider constructor
-            # By default, there is no api key ^_^
-            api_key: "%chaplean_geolocation.api_key%"
+            api_key: '%chaplean_geolocation.api_key%'
 
             # Locale used by the provider
-            # If your set a locale, this parameter will be the second parameter provider constructor if there is no api key else it will be the third
-            # By default, there is no locale
-            locale: "fr"
+            locale: fr

@@ -1,10 +1,10 @@
 <?php
 
-namespace Chaplean\Bundle\GeolocationBundle\Tests\Utility;
+namespace Tests\Chaplean\Bundle\GeolocationBundle\Utility;
 
 use Chaplean\Bundle\GeolocationBundle\Entity\Address;
 use Chaplean\Bundle\GeolocationBundle\Utility\GeoLocationUtility;
-use Chaplean\Bundle\UnitBundle\Test\LogicalTest;
+use Chaplean\Bundle\UnitBundle\Test\LogicalTestCase;
 use Ivory\GoogleMap\Base\Bound;
 use Ivory\GoogleMap\Base\Coordinate;
 use Ivory\GoogleMap\Services\Geocoding\Geocoder;
@@ -12,6 +12,7 @@ use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderAddressComponent;
 use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderGeometry;
 use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderResponse;
 use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderResult;
+use Mockery\MockInterface;
 
 /**
  * GeocoderUtilityTest.php.
@@ -20,7 +21,7 @@ use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderResult;
  * @copyright 2014 - 2015 Chaplean (http://www.chaplean.com)
  * @since     1.0.0
  */
-class GeoLocationUtilityTest extends LogicalTest
+class GeoLocationUtilityTest extends LogicalTestCase
 {
     /**
      * @var GeoLocationUtility
@@ -28,17 +29,28 @@ class GeoLocationUtilityTest extends LogicalTest
     private $geocoder;
 
     /**
-     * @var Geocoder
+     * @var Geocoder|MockInterface
      */
-    private $ivoryGeocoderMock;
+    private static $ivoryGeocoderMock;
+
+    /**
+     * @return void
+     */
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+
+        self::$ivoryGeocoderMock = \Mockery::mock('Ivory\GoogleMap\Services\Geocoding\Geocoder');
+    }
 
     /**
      * @return void
      */
     public function setUp()
     {
-        $this->ivoryGeocoderMock = \Mockery::mock('Ivory\GoogleMap\Services\Geocoding\Geocoder');
-        $this->getContainer()->set('ivory_google_map.geocoder', $this->ivoryGeocoderMock);
+        parent::setUp();
+
+        $this->getContainer()->set('ivory_google_map.geocoder', self::$ivoryGeocoderMock);
         $this->geocoder = $this->getContainer()->get('chaplean_geolocation.geolocation');
     }
 
@@ -48,7 +60,8 @@ class GeoLocationUtilityTest extends LogicalTest
      */
     public function testGetLongitudeLatitudeByAddressWithGoodAddress()
     {
-        $this->ivoryGeocoderMock->shouldReceive('geocode')
+        self::$ivoryGeocoderMock->shouldReceive('geocode')
+            ->once()
             ->andReturn(new GeocoderResponse(array(
                 new GeocoderResult(
                     array(),
@@ -70,11 +83,96 @@ class GeoLocationUtilityTest extends LogicalTest
                 ),
             ), 'OK'));
 
-        /** @var GeocoderResponse $response */
         $result = $this->geocoder->getLongitudeLatitudeByAddress('9 rue de condé, 33000, Bordeaux');
 
-        $this->assertEquals(44.8435849, round($result['latitude'], 7));
-        $this->assertEquals(-0.5733138, round($result['longitude'], 7));
+        static::assertEquals(44.8435849, round($result['latitude'], 7));
+        static::assertEquals(-0.5733138, round($result['longitude'], 7));
+    }
+
+    /**
+     * @return void
+     * @throws \Exception
+     */
+    public function testfindLongitudeLatitudeByAddressWithGoodAddress()
+    {
+        self::$ivoryGeocoderMock->shouldReceive('geocode')
+            ->once()
+            ->andReturn(new GeocoderResponse(array(
+                new GeocoderResult(
+                    array(),
+                    '9 Rue de Condé, 33000 Bordeaux, France',
+                    new GeocoderGeometry(
+                        new Coordinate(44.8435849, -0.5733138, true),
+                        'ROOFTOP',
+                        new Bound(
+                            new Coordinate(44.8435849, -0.5733138, true),
+                            new Coordinate(44.8435849, -0.5733138, true),
+                            array()
+                        ),
+                        null
+                    ),
+                    array(
+                        'street_address'
+                    ),
+                    null
+                ),
+            ), 'OK'));
+
+        $address = new Address();
+        $address->setBlock1('9 rue de condé');
+        $address->setBlock2('');
+        $address->setCity('Bordeaux');
+        $address->setZipcode('33000');
+
+        $result = $this->geocoder->findLongitudeLatitudeByAddress($address);
+
+        static::assertEquals(44.8435849, round($result['latitude'], 7));
+        static::assertEquals(-0.5733138, round($result['longitude'], 7));
+    }
+
+
+    /**
+     * @return void
+     * @throws \Exception
+     */
+    public function testfindLongitudeLatitudeByAddressWithSubAddressNotFound()
+    {
+        self::$ivoryGeocoderMock->shouldReceive('geocode')
+            ->once()
+            ->andReturn(new GeocoderResponse(array(), 'ZERO_RESULTS'))->once();
+        self::$ivoryGeocoderMock->shouldReceive('geocode')
+            ->once()
+            ->andReturn(new GeocoderResponse(array(
+                new GeocoderResult(
+                    array(),
+                    '1 Place de la Pyramide, 92800 Puteaux, France',
+                    new GeocoderGeometry(
+                        new Coordinate(48.8895717, 2.2420858, true),
+                        'ROOFTOP',
+                        new Bound(
+                            new Coordinate(48.888222669708, 2.2407368197085, true),
+                            new Coordinate(48.890920630291, 2.2434347802915, true),
+                            array()
+                        ),
+                        null
+                    ),
+                    array(
+                        'street_address'
+                    ),
+                    null
+                ),
+            ), 'OK'));
+
+        $address = new Address();
+        $address->setBlock1('Tour Atlantique');
+        $address->setBlock2('1, place de la pyramide ');
+        $address->setCity('Paris La Défense');
+        $address->setZipcode('92911');
+
+        $result = $this->geocoder->findLongitudeLatitudeByAddress($address);
+
+        static::assertEquals(48.8895717, round($result['latitude'], 7));
+        static::assertEquals(2.2420858, round($result['longitude'], 7));
     }
 
     /**
@@ -85,7 +183,8 @@ class GeoLocationUtilityTest extends LogicalTest
      */
     public function testGetLongitudeLatitudeByAddressWithBadAddress()
     {
-        $this->ivoryGeocoderMock->shouldReceive('geocode')
+        self::$ivoryGeocoderMock->shouldReceive('geocode')
+            ->once()
             ->andReturn(new GeocoderResponse(array(), 'ZERO_RESULTS'));
 
         /** @var GeocoderResponse $response */
@@ -94,10 +193,29 @@ class GeoLocationUtilityTest extends LogicalTest
 
     /**
      * @return void
+     *
+     * @expectedException \Exception
+     * @expectedExceptionMessage ZERO_RESULTS
+     */
+    public function testGetLongitudeLatitudeByAddressWithNotFoundAddress()
+    {
+        self::$ivoryGeocoderMock->shouldReceive('geocode')
+            ->twice()
+            ->andReturn(new GeocoderResponse(array(), 'ZERO_RESULTS'));
+
+        $address = new Address();
+
+        /** @var GeocoderResponse $response */
+        $this->geocoder->findLongitudeLatitudeByAddress($address);
+    }
+
+    /**
+     * @return void
      */
     public function testGetAddress()
     {
-        $this->ivoryGeocoderMock->shouldReceive('geocode')
+        self::$ivoryGeocoderMock->shouldReceive('geocode')
+            ->once()
             ->andReturn(new GeocoderResponse(array(
                 new GeocoderResult(
                     array(
@@ -129,9 +247,9 @@ class GeoLocationUtilityTest extends LogicalTest
 
         $address = $this->geocoder->getAddress('9 rue de condé, 33000, Bordeaux');
 
-        $this->assertInstanceOf(Address::class, $address);
-        $this->assertEquals('9 Rue de Condé', $address->getBlock1());
-        $this->assertEquals('33000', $address->getZipcode());
-        $this->assertEquals('Bordeaux', $address->getCity());
+        static::assertInstanceOf(Address::class, $address);
+        static::assertEquals('9 Rue de Condé', $address->getBlock1());
+        static::assertEquals('33000', $address->getZipcode());
+        static::assertEquals('Bordeaux', $address->getCity());
     }
 }

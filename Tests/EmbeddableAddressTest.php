@@ -1,9 +1,9 @@
 <?php
 
-namespace Chaplean\Bundle\GeolocationBundle\Tests;
+namespace Tests\Chaplean\Bundle\GeolocationBundle;
 
 use Chaplean\Bundle\GeolocationBundle\Entity\Address;
-use Chaplean\Bundle\UnitBundle\Test\LogicalTest;
+use Chaplean\Bundle\UnitBundle\Test\LogicalTestCase;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -14,16 +14,8 @@ use JMS\Serializer\Annotation as JMS;
  * @copyright 2014 - 2015 Chaplean (http://www.chaplean.com)
  * @since     3.0.0
  */
-class EmbeddableAddressTest extends LogicalTest
+class EmbeddableAddressTest extends LogicalTestCase
 {
-    /**
-     * @return void
-     */
-    public static function setUpBeforeClass()
-    {
-        parent::setUpBeforeClass();
-    }
-
     /**
      * @return void
      */
@@ -40,7 +32,7 @@ class EmbeddableAddressTest extends LogicalTest
         $this->em->flush();
 
         /** @var EmbeddableAddress[] $newEmbeddableAddress */
-        $newEmbeddableAddress = $this->em->getRepository('Chaplean\Bundle\GeolocationBundle\Tests\EmbeddableAddress')->findAll();
+        $newEmbeddableAddress = $this->em->getRepository('Tests\Chaplean\Bundle\GeolocationBundle\EmbeddableAddress')->findAll();
 
         $this->assertCount(1, $newEmbeddableAddress);
         $this->assertEquals('toto', $newEmbeddableAddress[0]->getAddress()->getBlock1());
@@ -70,6 +62,7 @@ class EmbeddableAddress
     {
         return $this->id;
     }
+
     /**
      * @ORM\Embedded(class="Chaplean\Bundle\GeolocationBundle\Entity\Address")
      */

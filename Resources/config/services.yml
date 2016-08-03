@@ -7,3 +7,4 @@ services:
     chaplean_geolocation.geolocation:
         class: Chaplean\Bundle\GeolocationBundle\Utility\GeoLocationUtility
         arguments: ['@ivory_google_map.geocoder', '@logger', '%chaplean_geolocation%']
+        shared: false

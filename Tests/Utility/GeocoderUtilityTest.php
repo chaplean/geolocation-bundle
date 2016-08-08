@@ -252,4 +252,35 @@ class GeoLocationUtilityTest extends LogicalTestCase
         static::assertEquals('33000', $address->getZipcode());
         static::assertEquals('Bordeaux', $address->getCity());
     }
+
+    /**
+     * @dataProvider citiesProvider
+     *
+     * @param string $expected
+     * @param string $city
+     *
+     * @return void
+     */
+    public function testCleanCity($expected, $city)
+    {
+        $cityCleaned = $this->geocoder->cleanCity($city);
+
+        $this->assertEquals($expected, $cityCleaned);
+    }
+
+    /**
+     * @return array
+     */
+    public function citiesProvider()
+    {
+        return array(
+            array('', 'Cedex 0'),
+            array('', 'CeDeX 0'),
+            array('', 'CEDEX 0'),
+            array('', 'Cedex5'),
+            array('', 'Cedex'),
+            array('Bordeaux ', 'Bordeaux CEDEX'),
+            array('Bordeaux ', 'Bordeaux CeDeX 201'),
+        );
+    }
 }

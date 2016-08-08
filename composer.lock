@@ -3231,12 +3231,12 @@
         },
         {
             "name": "chaplean/unit-bundle",
-            "version": "v3.0.4",
+            "version": "v3.0.6",
             "target-dir": "Chaplean/Bundle/UnitBundle",
             "source": {
                 "type": "git",
                 "url": "git@bitbucket.org:chaplean/unit-bundle.git",
-                "reference": "52d360c78cf63d87f4199ee35384a8b8b258e6b5"
+                "reference": "f5b4afb8a946046f6edb7eb598af61ac0fe083b4"
             },
             "require": {
                 "doctrine/doctrine-bundle": "~1.4",
@@ -3282,7 +3282,7 @@
             "keywords": [
                 "symfony2"
             ],
-            "time": "2016-06-02 10:14:54"
+            "time": "2016-06-17 12:19:28"
         },
         {
             "name": "doctrine/data-fixtures",

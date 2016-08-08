@@ -69,7 +69,7 @@ class GeoLocationUtility
      */
     public function findLongitudeLatitudeByAddress($address)
     {
-        $city = preg_replace('/(C|c)(E|e)(D|d)(E|e)(X|x)\s\d*/', '', $address->getCity());
+        $city = $this->cleanCity($address->getCity());
 
         $search = sprintf('%s %s %s', $address->getBlock1(), $address->getZipcode(), $city);
         try {
@@ -96,7 +96,15 @@ class GeoLocationUtility
         }
     }
 
-//    public function
+    /**
+     * @param string $city
+     *
+     * @return string
+     */
+    public function cleanCity($city)
+    {
+        return preg_replace('/([C|c][E|e][D|d][E|e][X|x]\s*\d*)/', '', $city);
+    }
 
     /**
      * @param string $address

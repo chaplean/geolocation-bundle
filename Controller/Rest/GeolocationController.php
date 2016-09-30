@@ -29,20 +29,22 @@ class GeolocationController extends FOSRestController
     {
         $geolocation = $this->get('chaplean_geolocation.ip_location');
 
-        $city = $geolocation->getCityFromIp($request->getClientIp());
-        if (!empty($city) && count($city->subdivisions) == 2) {
-            $region = $city->subdivisions[0]->names['fr'];
-            $department = $city->subdivisions[1]->names['fr'];
-            $geo = array(
-                'region'     => $region,
-                'department' => $department
-            );
-        } else {
-            $geo = array(
-                'region'     => null,
-                'department' => null
-            );
+        $city = $geolocation->getCityFromUserIp();
+        $region = null;
+        $department = null;
+        if (!empty($city)) {
+            if (count($city->subdivisions) === 2) {
+                $region = $city->subdivisions[0]->names['fr'];
+                $department = $city->subdivisions[1]->names['fr'];
+            } else if (count($city->subdivisions) === 1){
+                $department = $city->subdivisions[0]->names['fr'];
+            }
         }
+
+        $geo = array(
+            'region'     => $region,
+            'department' => $department
+        );
 
         return $this->handleView($this->view($geo));
     }

@@ -4,7 +4,6 @@ namespace Chaplean\Bundle\GeolocationBundle\Controller\Rest;
 
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations;
-use FOS\RestBundle\Util\Codes;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -30,20 +29,22 @@ class GeolocationController extends FOSRestController
     {
         $geolocation = $this->get('chaplean_geolocation.ip_location');
 
-        $city = $geolocation->getCityFromIp($request->getClientIp());
-        if (!empty($city) && count($city->subdivisions) == 2) {
-            $region = $city->subdivisions[0]->names['fr'];
-            $department = $city->subdivisions[1]->names['fr'];
-            $geo = array(
-                'region'     => $region,
-                'department' => $department
-            );
-        } else {
-            $geo = array(
-                'region'     => null,
-                'department' => null
-            );
+        $city = $geolocation->getCityFromUserIp();
+        $region = null;
+        $department = null;
+        if (!empty($city)) {
+            if (count($city->subdivisions) === 2) {
+                $region = $city->subdivisions[0]->names['fr'];
+                $department = $city->subdivisions[1]->names['fr'];
+            } else if (count($city->subdivisions) === 1){
+                $department = $city->subdivisions[0]->names['fr'];
+            }
         }
+
+        $geo = array(
+            'region'     => $region,
+            'department' => $department
+        );
 
         return $this->handleView($this->view($geo));
     }
@@ -64,7 +65,7 @@ class GeolocationController extends FOSRestController
         try {
             $location = $geocoder->getLongitudeLatitudeByAddress($address);
         } catch (\Exception $e) {
-            return $this->handleView($this->view('Address not found', Codes::HTTP_NOT_FOUND));
+            return $this->handleView($this->view('Address not found', Response::HTTP_NOT_FOUND));
         }
 
         return $this->handleView($this->view($location));
@@ -88,7 +89,7 @@ class GeolocationController extends FOSRestController
         try {
             $address = $geocoder->getAddress($address);
         } catch (\Exception $e) {
-            return $this->handleView($this->view('Address not found', Codes::HTTP_BAD_REQUEST));
+            return $this->handleView($this->view('Address not found', Response::HTTP_BAD_REQUEST));
         }
 
         if (!empty($address)) {
@@ -98,7 +99,7 @@ class GeolocationController extends FOSRestController
                 $em->persist($address);
                 $em->flush();
             } catch (\Exception $e) {
-                return $this->handleView($this->view('Address could not be saved', Codes::HTTP_INTERNAL_SERVER_ERROR));
+                return $this->handleView($this->view('Address could not be saved', Response::HTTP_INTERNAL_SERVER_ERROR));
             }
         }
 

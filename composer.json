@@ -33,7 +33,7 @@
         "cravler/maxmind-geoip-bundle": "^1.0",
         "willdurand/geocoder": "2.8.*",
         "egeloen/google-map-bundle": "~2.2",
-        "friendsofsymfony/rest-bundle": "~1.7",
+        "friendsofsymfony/rest-bundle": "~2.1",
         "jms/serializer-bundle": "^1.1"
     },
     "require-dev": {

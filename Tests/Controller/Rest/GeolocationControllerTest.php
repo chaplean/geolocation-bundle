@@ -4,7 +4,6 @@ namespace Tests\Chaplean\Bundle\GeolocationBundle\Controller\Rest;
 
 use Chaplean\Bundle\GeolocationBundle\Entity\Address;
 use Chaplean\Bundle\UnitBundle\Test\LogicalTestCase;
-use FOS\RestBundle\Util\Codes;
 use Geocoder\Geocoder;
 use Ivory\GoogleMap\Base\Bound;
 use Ivory\GoogleMap\Base\Coordinate;
@@ -12,6 +11,7 @@ use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderAddressComponent;
 use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderGeometry;
 use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderResponse;
 use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderResult;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Client;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -97,7 +97,7 @@ class GeolocationControllerTest extends LogicalTestCase
 
         $response = $this->client->getResponse();
 
-        static::assertEquals(Codes::HTTP_NOT_FOUND, $response->getStatusCode());
+        static::assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
         static::assertEquals('"Address not found"', $response->getContent());
     }
 
@@ -141,7 +141,7 @@ class GeolocationControllerTest extends LogicalTestCase
         $response = $this->client->getResponse();
         $content = json_decode($response->getContent(), true);
 
-        static::assertEquals(Codes::HTTP_OK, $response->getStatusCode());
+        static::assertEquals(Response::HTTP_OK, $response->getStatusCode());
         static::assertEquals(1, $content['id']);
         static::assertEquals('9 Rue de Condé', $content['block1']);
         static::assertEquals(null, $content['block2']);
@@ -162,7 +162,7 @@ class GeolocationControllerTest extends LogicalTestCase
 
         $response = $this->client->getResponse();
 
-        static::assertEquals(Codes::HTTP_BAD_REQUEST, $response->getStatusCode());
+        static::assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
         static::assertEquals('"Address not found"', $response->getContent());
     }
 

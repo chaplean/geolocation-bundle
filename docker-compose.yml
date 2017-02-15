@@ -3,8 +3,6 @@ services:
     application:
         container_name: geolocation_bundle_app
         build: .
-        expose:
-            - "9000"
         volumes:
             - .:/var/www/symfony
         links:

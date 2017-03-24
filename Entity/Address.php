@@ -51,6 +51,7 @@ class Address
      * @ORM\Column(type="integer", length=5, nullable=true, name="zipcode")
      *
      * @JMS\Groups({"address_zipcode", "address_all"})
+     * @JMS\Accessor(getter="getZipcode",setter="setZipcode")
      */
     protected $zipcode;
 
@@ -191,23 +192,23 @@ class Address
     /**
      * Get zipcode.
      *
-     * @return mixed
+     * @return string
      */
     public function getZipcode()
     {
-        return $this->zipcode;
+        return sprintf('%05d', $this->zipcode);
     }
 
     /**
      * Set zipcode.
      *
-     * @param mixed $zipcode
+     * @param string $zipcode
      *
      * @return Address
      */
     public function setZipcode($zipcode)
     {
-        $this->zipcode = $zipcode;
+        $this->zipcode = (int) $zipcode;
 
         return $this;
     }

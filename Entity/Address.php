@@ -196,7 +196,9 @@ class Address
      */
     public function getZipcode()
     {
-        return sprintf('%05d', $this->zipcode);
+		return $this->zipcode !== null
+			? sprintf('%05d', $this->zipcode)
+			: null;
     }
 
     /**
@@ -208,7 +210,9 @@ class Address
      */
     public function setZipcode($zipcode)
     {
-        $this->zipcode = (int) $zipcode;
+        $this->zipcode = $zipcode !== null
+            ? (int) $zipcode
+            : null;
 
         return $this;
     }
@@ -279,5 +283,19 @@ class Address
             ',' .
             ($this->zipcode ?  ' ' . $this->getZipcode() : '') .
             ' ' . $this->city;
+    }
+
+    /**
+     * Constructs an empty Address
+     *
+     * @return Address
+     */
+    public static function constructEmpty()
+    {
+        $address = new Address();
+        $address->setBlock1('');
+        $address->setCity('');
+
+        return $address;
     }
 }

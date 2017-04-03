@@ -4,6 +4,7 @@ namespace Tests\Chaplean\Bundle\GeolocationBundle\Entity;
 
 use Chaplean\Bundle\GeolocationBundle\Entity\Address;
 use Chaplean\Bundle\UnitBundle\Test\LogicalTestCase;
+use Tests\Chaplean\Bundle\GeolocationBundle\EmbeddableAddress;
 
 /**
  * Class AddressTest.
@@ -24,6 +25,7 @@ class AddressTest extends LogicalTestCase
             [0,     '00000'],
             [75000, '75000'],
             [5000,  '05000'],
+            [null,  null],
         ];
     }
 
@@ -81,5 +83,20 @@ class AddressTest extends LogicalTestCase
         $address->setCity($city);
 
         $this->assertEquals($expected, $address->getAddress());
+    }
+
+    /**
+     * @return void
+     */
+    public function testConstructEmpty()
+    {
+        $addressContainer = new EmbeddableAddress();
+        $address = Address::constructEmpty();
+        $addressContainer->setAddress($address);
+
+        $this->em->persist($addressContainer);
+        $this->em->flush();
+
+        $this->assertEquals(', ', $address->getAddress());
     }
 }

@@ -276,13 +276,16 @@ class Address
      */
     public function getAddress()
     {
-        return $this->block1 .
+        return trim(
+            $this->block1 .
             ($this->block2 ? ' ' . $this->block2 : '') .
             ($this->block3 ? ' ' . $this->block3 : '') .
             ($this->floor ? ' ' . $this->floor : '') .
             ',' .
             ($this->zipcode ?  ' ' . $this->getZipcode() : '') .
-            ' ' . $this->city;
+            ' ' . $this->city,
+            ', '
+        );
     }
 
     /**

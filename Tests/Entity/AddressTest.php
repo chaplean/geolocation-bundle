@@ -97,6 +97,6 @@ class AddressTest extends LogicalTestCase
         $this->em->persist($addressContainer);
         $this->em->flush();
 
-        $this->assertEquals(', ', $address->getAddress());
+        $this->assertEquals('', $address->getAddress());
     }
 }

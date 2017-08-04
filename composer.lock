@@ -3186,7 +3186,7 @@
             "version": "v1.1.4",
             "source": {
                 "type": "git",
-                "url": "git@bitbucket.org:chaplean/coding-standard.git",
+                "url": "https://github.com/chaplean/coding-standard",
                 "reference": "d1f61f9ec0c91579ba4b961a64ce7c1bb6827e65"
             },
             "require": {

@@ -30,6 +30,8 @@ class AddressTest extends LogicalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::getZipcode()
+     *
      * @dataProvider integerZipcodeToStringProvider
      *
      * @param integer $zipcode
@@ -60,6 +62,8 @@ class AddressTest extends LogicalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::getAddress()
+     *
      * @dataProvider addressToExpectedStringsProvider
      *
      * @param string  $block1
@@ -86,6 +90,8 @@ class AddressTest extends LogicalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::constructEmpty()
+     *
      * @return void
      */
     public function testConstructEmpty()
@@ -98,5 +104,33 @@ class AddressTest extends LogicalTestCase
         $this->em->flush();
 
         $this->assertEquals('', $address->getAddress());
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::isEqual()
+     *
+     * @return void
+     */
+    public function testIsEqual()
+    {
+        $address1 = new Address();
+        $address2 = new Address();
+
+        $this->assertTrue($address1->isEqual($address2));
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::isEqual()
+     *
+     * @return void
+     */
+    public function testIsNotEqual()
+    {
+        $address1 = new Address();
+        $address2 = new Address();
+        $address1->setLatitude(1);
+        $address1->setLongitude(1);
+
+        $this->assertFalse($address1->isEqual($address2));
     }
 }

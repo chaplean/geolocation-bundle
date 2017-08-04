@@ -301,4 +301,23 @@ class Address
 
         return $address;
     }
+
+    /**
+     * Compares this address with another for equality
+     *
+     * @param Address $other
+     *
+     * @return bool
+     */
+    public function isEqual(Address $other)
+    {
+        return $this->block1 == $other->block1 &&
+               $this->block2 == $other->block2 &&
+               $this->block3 == $other->block3 &&
+               $this->city == $other->city &&
+               $this->floor == $other->floor &&
+               $this->zipcode == $other->zipcode &&
+               $this->latitude == $other->latitude &&
+               $this->longitude == $other->longitude;
+    }
 }

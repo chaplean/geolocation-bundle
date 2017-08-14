@@ -11,8 +11,8 @@ use Monolog\Logger;
 /**
  * GeocoderUtility.php.
  *
- * @author    Valentin - Chaplean <valentin@chaplean.com>
- * @copyright 2014 - 2015 Chaplean (http://www.chaplean.com)
+ * @author    Valentin - Chaplean <valentin@chaplean.coop>
+ * @copyright 2014 - 2015 Chaplean (http://www.chaplean.coop)
  * @since     1.18.0
  */
 class GeoLocationUtility
@@ -68,7 +68,7 @@ class GeoLocationUtility
      */
     public function findLongitudeLatitudeByAddress(Address $address)
     {
-        $city = preg_replace('/(C|c)(E|e)(D|d)(E|e)(X|x)\s\d*/', '', $address->getCity());
+        $city = $this->cleanCity($address->getCity());
 
         $search = sprintf('%s %s %s', $address->getBlock1(), $address->getZipcode(), $city);
         try {
@@ -84,6 +84,16 @@ class GeoLocationUtility
             $this->logger->warn(sprintf('[ChapleanGeolocationBundle] (2) Not found with \'%s\'', $search));
             throw $e;
         }
+    }
+
+    /**
+     * @param string $city
+     *
+     * @return string
+     */
+    public function cleanCity($city)
+    {
+        return preg_replace('/([C|c][E|e][D|d][E|e][X|x]\s*\d*)/', '', $city);
     }
 
     /**

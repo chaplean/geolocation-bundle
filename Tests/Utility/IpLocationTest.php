@@ -10,8 +10,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * IpLocationTest.php.
  *
- * @author    Matthias - Chaplean <matthias@chaplean.com>
- * @copyright 2014 - 2015 Chaplean (http://www.chaplean.com)
+ * @author    Matthias - Chaplean <matthias@chaplean.coop>
+ * @copyright 2014 - 2015 Chaplean (http://www.chaplean.coop)
  * @since     v1.0.0
  */
 class IpLocationTest extends LogicalTestCase
@@ -39,6 +39,8 @@ class IpLocationTest extends LogicalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::getCityFromIp()
+     *
      * @return void
      */
     public function testGetExistingCityFromIpv4()
@@ -49,6 +51,8 @@ class IpLocationTest extends LogicalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::getCityFromIp()
+     *
      * @return void
      */
     public function testGetNonExistingCityFromIpv4()
@@ -58,6 +62,8 @@ class IpLocationTest extends LogicalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::getCityFromIp()
+     *
      * @return void
      */
     public function testGetInvalidIpv4()
@@ -67,6 +73,8 @@ class IpLocationTest extends LogicalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::getCityFromIp()
+     *
      * @return void
      */
     public function testGetExistingCityFromIpv6()
@@ -77,6 +85,8 @@ class IpLocationTest extends LogicalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::getCityFromIp()
+     *
      * @return void
      */
     public function testGetNonExistingCityFromIpv6()
@@ -86,6 +96,8 @@ class IpLocationTest extends LogicalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::getCityFromIp()
+     *
      * @return void
      */
     public function testGetInvalidIpv6()
@@ -95,6 +107,8 @@ class IpLocationTest extends LogicalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::getCityFromUserIp()
+     *
      * @return void
      */
     public function testGetExistingCityFromUser()
@@ -110,6 +124,8 @@ class IpLocationTest extends LogicalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::getCityFromUserIp()
+     *
      * @return void
      */
     public function testGetNonExistingCityFromUser()

@@ -1,18 +1,13 @@
 imports:
     - { resource: parameters.yml }
-    - { resource: security.yml }
     - { resource: '@ChapleanGeolocationBundle/Resources/config/config.yml' }
 
 framework:
     test: ~
-    translator:      { fallback: '%locale%' }
     secret:          '%secret%'
     router:
         resource: '%kernel.root_dir%/config/routing.yml'
         strict_requirements: true
-    form:            ~
-    csrf_protection: ~
-    validation:      { enable_annotations: true }
     templating:
         engines: ['twig']
     default_locale:  '%locale%'
@@ -24,7 +19,6 @@ framework:
     fragments:       ~
     http_method_override: true
     profiler: { only_exceptions: false }
-
 
 # Twig Configuration
 twig:
@@ -83,13 +77,13 @@ doctrine:
                     DummyAddress:
                         type:      annotation
                         dir:       '%kernel.root_dir%/../Tests/Controller/Rest'
-                        prefix:    Tests\Chaplean\Bundle\GeolocationBundle\Controller\Rest\DummyAddress
+                        prefix:    Tests\Chaplean\Bundle\GeolocationBundle\Resources\Entity\DummyAddress
                         alias:     DummyAddress
                         is_bundle: false
                     EmbeddableAddress:
                         type:      annotation
                         dir:       '%kernel.root_dir%/../Tests/'
-                        prefix:    Tests\Chaplean\Bundle\GeolocationBundle\EmbeddableAddress
+                        prefix:    Tests\Chaplean\Bundle\GeolocationBundle\Resources\Entity\EmbeddableAddress
                         alias:     EmbeddableAddress
                         is_bundle: false
 
@@ -123,4 +117,4 @@ fos_rest:
 
 chaplean_geolocation:
     persist_entity:
-        address: Tests\Chaplean\Bundle\GeolocationBundle\Controller\Rest\DummyAddress
+        address: Tests\Chaplean\Bundle\GeolocationBundle\Resources\Entity\DummyAddress

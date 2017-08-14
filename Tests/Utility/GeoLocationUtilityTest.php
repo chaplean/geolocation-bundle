@@ -17,8 +17,8 @@ use Mockery\MockInterface;
 /**
  * GeocoderUtilityTest.php.
  *
- * @author    Valentin - Chaplean <valentin@chaplean.com>
- * @copyright 2014 - 2015 Chaplean (http://www.chaplean.com)
+ * @author    Valentin - Chaplean <valentin@chaplean.coop>
+ * @copyright 2014 - 2015 Chaplean (http://www.chaplean.coop)
  * @since     1.0.0
  */
 class GeoLocationUtilityTest extends LogicalTestCase
@@ -55,6 +55,8 @@ class GeoLocationUtilityTest extends LogicalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeoLocationUtility::getLongitudeLatitudeByAddress()
+     *
      * @return void
      * @throws \Exception
      */
@@ -90,6 +92,8 @@ class GeoLocationUtilityTest extends LogicalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeoLocationUtility::findLongitudeLatitudeByAddress()
+     *
      * @return void
      * @throws \Exception
      */
@@ -132,6 +136,8 @@ class GeoLocationUtilityTest extends LogicalTestCase
 
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeoLocationUtility::findLongitudeLatitudeByAddress()
+     *
      * @return void
      * @throws \Exception
      */
@@ -176,6 +182,8 @@ class GeoLocationUtilityTest extends LogicalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeoLocationUtility::getLongitudeLatitudeByAddress()
+     *
      * @return void
      *
      * @expectedException \Exception
@@ -192,6 +200,8 @@ class GeoLocationUtilityTest extends LogicalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeoLocationUtility::findLongitudeLatitudeByAddress()
+     *
      * @return void
      *
      * @expectedException \Exception
@@ -210,6 +220,8 @@ class GeoLocationUtilityTest extends LogicalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeoLocationUtility::getAddress()
+     *
      * @return void
      */
     public function testGetAddress()
@@ -254,6 +266,8 @@ class GeoLocationUtilityTest extends LogicalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeoLocationUtility::cleanCity()
+     *
      * @dataProvider citiesProvider
      *
      * @param string $expected

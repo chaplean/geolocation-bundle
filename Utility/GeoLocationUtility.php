@@ -11,8 +11,8 @@ use Monolog\Logger;
 /**
  * GeocoderUtility.php.
  *
- * @author    Valentin - Chaplean <valentin@chaplean.com>
- * @copyright 2014 - 2015 Chaplean (http://www.chaplean.com)
+ * @author    Valentin - Chaplean <valentin@chaplean.coop>
+ * @copyright 2014 - 2015 Chaplean (http://www.chaplean.coop)
  * @since     1.18.0
  */
 class GeoLocationUtility

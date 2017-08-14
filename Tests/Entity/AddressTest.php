@@ -4,14 +4,14 @@ namespace Tests\Chaplean\Bundle\GeolocationBundle\Entity;
 
 use Chaplean\Bundle\GeolocationBundle\Entity\Address;
 use Chaplean\Bundle\UnitBundle\Test\LogicalTestCase;
-use Tests\Chaplean\Bundle\GeolocationBundle\EmbeddableAddress;
+use Tests\Chaplean\Bundle\GeolocationBundle\Resources\Entity\EmbeddableAddress;
 
 /**
  * Class AddressTest.
  *
  * @package   Tests\Chaplean\Bundle\GeolocationBundle\Entity
- * @author    Matthias - Chaplean <matthias@chaplean.com>
- * @copyright 2014 - 2017 Chaplean (http://www.chaplean.com)
+ * @author    Matthias - Chaplean <matthias@chaplean.coop>
+ * @copyright 2014 - 2017 Chaplean (http://www.chaplean.coop)
  * @since     4.0.0
  */
 class AddressTest extends LogicalTestCase

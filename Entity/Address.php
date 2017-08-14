@@ -13,6 +13,8 @@ use JMS\Serializer\Annotation as JMS;
 class Address
 {
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=200, nullable=false, name="block1")
      *
      * @JMS\Groups({"address_block1", "address_all"})
@@ -20,6 +22,8 @@ class Address
     protected $block1;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=200, nullable=true, name="block2")
      *
      * @JMS\Groups({"address_block2", "address_all"})
@@ -27,6 +31,8 @@ class Address
     protected $block2;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=200, nullable=true, name="block3")
      *
      * @JMS\Groups({"address_block3", "address_all"})
@@ -34,6 +40,8 @@ class Address
     protected $block3;
 
     /**
+     * @var integer
+     *
      * @ORM\Column(type="smallint", nullable=true, name="floor", options={"unsigned":true})
      *
      * @JMS\Groups({"address_floor", "address_all"})
@@ -41,6 +49,8 @@ class Address
     protected $floor;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=60, nullable=false, name="city_complement")
      *
      * @JMS\Groups({"address_city", "address_all"})
@@ -48,6 +58,8 @@ class Address
     protected $city;
 
     /**
+     * @var integer
+     *
      * @ORM\Column(type="integer", length=5, nullable=true, name="zipcode")
      *
      * @JMS\Groups({"address_zipcode", "address_all"})
@@ -56,6 +68,8 @@ class Address
     protected $zipcode;
 
     /**
+     * @var float
+     *
      * @ORM\Column(type="decimal", length=10, nullable=true, name="longitude", precision=10, scale=7)
      *
      * @JMS\Groups({"address_longitude", "address_all"})
@@ -63,6 +77,8 @@ class Address
     protected $longitude;
 
     /**
+     * @var float
+     *
      * @ORM\Column(type="decimal", length=10, nullable=true, name="latitude", scale=7, precision=10)
      *
      * @JMS\Groups({"address_latitude", "address_all"})
@@ -72,7 +88,7 @@ class Address
     /**
      * Get block1.
      *
-     * @return mixed
+     * @return string
      */
     public function getBlock1()
     {
@@ -82,7 +98,7 @@ class Address
     /**
      * Set block1.
      *
-     * @param mixed $block1
+     * @param string $block1
      *
      * @return Address
      */
@@ -96,7 +112,7 @@ class Address
     /**
      * Get block2.
      *
-     * @return mixed
+     * @return string
      */
     public function getBlock2()
     {
@@ -106,7 +122,7 @@ class Address
     /**
      * Set block2.
      *
-     * @param mixed $block2
+     * @param string $block2
      *
      * @return Address
      */
@@ -120,7 +136,7 @@ class Address
     /**
      * Get block3.
      *
-     * @return mixed
+     * @return string
      */
     public function getBlock3()
     {
@@ -130,7 +146,7 @@ class Address
     /**
      * Set block3.
      *
-     * @param mixed $block3
+     * @param string $block3
      *
      * @return Address
      */
@@ -144,7 +160,7 @@ class Address
     /**
      * Get floor.
      *
-     * @return mixed
+     * @return integer
      */
     public function getFloor()
     {
@@ -154,7 +170,7 @@ class Address
     /**
      * Set floor.
      *
-     * @param mixed $floor
+     * @param integer $floor
      *
      * @return Address
      */
@@ -168,7 +184,7 @@ class Address
     /**
      * Get city.
      *
-     * @return mixed
+     * @return string
      */
     public function getCity()
     {
@@ -178,7 +194,7 @@ class Address
     /**
      * Set city.
      *
-     * @param mixed $city
+     * @param string $city
      *
      * @return Address
      */
@@ -220,7 +236,7 @@ class Address
     /**
      * Get longitude.
      *
-     * @return mixed
+     * @return float
      */
     public function getLongitude()
     {
@@ -230,7 +246,7 @@ class Address
     /**
      * Set longitude.
      *
-     * @param mixed $longitude
+     * @param float $longitude
      *
      * @return Address
      */
@@ -244,7 +260,7 @@ class Address
     /**
      * Get latitude.
      *
-     * @return mixed
+     * @return float
      */
     public function getLatitude()
     {
@@ -254,7 +270,7 @@ class Address
     /**
      * Set latitude.
      *
-     * @param mixed $latitude
+     * @param float $latitude
      *
      * @return Address
      */
@@ -307,7 +323,7 @@ class Address
      *
      * @param Address $other
      *
-     * @return bool
+     * @return boolean
      */
     public function isEqual(Address $other)
     {

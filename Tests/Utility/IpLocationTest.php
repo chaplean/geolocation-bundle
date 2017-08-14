@@ -107,7 +107,6 @@ class IpLocationTest extends LogicalTestCase
     }
 
     /**
-     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::getClientIp()
      * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::getCityFromUserIp()
      *
      * @return void
@@ -125,7 +124,6 @@ class IpLocationTest extends LogicalTestCase
     }
 
     /**
-     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::getClientIp()
      * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::getCityFromUserIp()
      *
      * @return void

@@ -36,7 +36,7 @@
         "symfony/config": "^2.7",
         "symfony/console": "^2.7",
         "symfony/dependency-injection": "^2.7",
-        "symfony/monolog-bundle": "^2.7",
+        "symfony/monolog-bundle": "^2.7 || ^3.0",
         "symfony/twig-bundle": "^2.7",
         "willdurand/geocoder": "^2.8"
     },
@@ -47,8 +47,8 @@
         "mockery/mockery": "dev-master",
         "satooshi/php-coveralls": "dev-master",
         "sensio/distribution-bundle": "^5.0",
-        "symfony/http-kernel": "^2.7",
-        "symfony/var-dumper": "^2.7"
+        "symfony/http-kernel": "^2.7 || ^3.0",
+        "symfony/var-dumper": "^2.7 || ^3.0"
     },
     "scripts": {
         "post-install-cmd": [

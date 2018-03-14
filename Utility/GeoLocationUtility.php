@@ -3,10 +3,10 @@
 namespace Chaplean\Bundle\GeolocationBundle\Utility;
 
 use Chaplean\Bundle\GeolocationBundle\Entity\Address;
-use Ivory\GoogleMap\Services\Geocoding\Geocoder;
-use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderAddressComponent;
-use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderResponse;
+use Geocoder\Geocoder;
+use Geocoder\Model\AddressCollection;
 use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 
 /**
  * GeocoderUtility.php.
@@ -18,7 +18,7 @@ use Monolog\Logger;
 class GeoLocationUtility
 {
     /**
-     * @var Geocoder
+     * @var \Geocoder\Provider\GoogleMaps
      */
     private $geocoder;
 
@@ -33,11 +33,11 @@ class GeoLocationUtility
     private $logger;
 
     /**
-     * @param Geocoder $geocoder
-     * @param Logger   $logger
-     * @param array    $parameters
+     * @param Geocoder        $geocoder
+     * @param LoggerInterface $logger
+     * @param array           $parameters
      */
-    public function __construct(Geocoder $geocoder, Logger $logger, array $parameters)
+    public function __construct(Geocoder $geocoder, LoggerInterface $logger, array $parameters)
     {
         $this->geocoder = $geocoder;
         $this->parameters = $parameters;
@@ -54,10 +54,10 @@ class GeoLocationUtility
     {
         $result = $this->geocode($address);
 
-        return array(
-            'longitude' => $result->getGeometry()->getLocation()->getLongitude(),
-            'latitude'  => $result->getGeometry()->getLocation()->getLatitude(),
-        );
+        return [
+            'longitude' => $result->getCoordinates()->getLongitude(),
+            'latitude'  => $result->getCoordinates()->getLatitude(),
+        ];
     }
 
     /**
@@ -74,14 +74,14 @@ class GeoLocationUtility
         try {
             return $this->getLongitudeLatitudeByAddress($search);
         } catch (\Exception $e) {
-            $this->logger->warn(sprintf('[ChapleanGeolocationBundle] (1) Not found with \'%s\'', $search));
+            $this->logger->warning(sprintf('[ChapleanGeolocationBundle] (1) Not found with \'%s\'', $search));
         }
 
         $search = sprintf('%s %s %s', $address->getBlock2(), $address->getZipcode(), $city);
         try {
             return $this->getLongitudeLatitudeByAddress($search);
         } catch (\Exception $e) {
-            $this->logger->warn(sprintf('[ChapleanGeolocationBundle] (2) Not found with \'%s\'', $search));
+            $this->logger->warning(sprintf('[ChapleanGeolocationBundle] (2) Not found with \'%s\'', $search));
             throw $e;
         }
     }
@@ -105,7 +105,7 @@ class GeoLocationUtility
     public function getAddress($address)
     {
         if (empty($this->parameters['persist_entity']['address'])) {
-            throw new \Exception('Define \'%s\' configuration, if you want use Address like a class !');
+            throw new \Exception('Define \'persist_entity\' configuration, if you want use Address like a class !');
         }
 
         $result = $this->geocode($address);
@@ -114,28 +114,11 @@ class GeoLocationUtility
         /** @var mixed $address */
         $address = new $class();
 
-        $block1 = '';
-        foreach ($result->getAddressComponents() as $addressComponent) {
-            list($value, $type) = $this->getAddressComponement($addressComponent);
-
-            switch ($type) {
-                case 'street_number':
-                    $block1 .= $value . ' ';
-                    break;
-                case 'route':
-                    $address->setBlock1($block1 . $value);
-                    break;
-                case 'locality':
-                    $address->setCity($value);
-                    break;
-                case 'postal_code':
-                    $address->setZipcode($value);
-                    break;
-            }
-        }
-
-        $address->setLongitude($result->getGeometry()->getLocation()->getLongitude());
-        $address->setLatitude($result->getGeometry()->getLocation()->getLatitude());
+        $address->setBlock1(sprintf('%s %s', $result->getStreetNumber(), $result->getStreetName()));
+        $address->setCity($result->getLocality());
+        $address->setZipcode($result->getPostalCode());
+        $address->setLongitude($result->getCoordinates()->getLongitude());
+        $address->setLatitude($result->getCoordinates()->getLatitude());
 
         return $address;
     }
@@ -143,35 +126,24 @@ class GeoLocationUtility
     /**
      * @param string $address
      *
-     * @return mixed
+     * @return \Geocoder\Model\Address
      * @throws \Exception
      */
     public function geocode($address)
     {
-        /** @var GeocoderResponse $response */
-        $response = $this->geocoder->geocode($address);
-
-        $results = $response->getResults();
-
-        if ($response->getStatus() !== 'OK') {
-            throw new \Exception($response->getStatus());
-        } elseif (count($results) > 1) {
-            throw new \Exception(count($results));
+        try {
+            /** @var AddressCollection $results */
+            $results = $this->geocoder->geocode($address);
+        } catch (\Exception $e) {
+            $this->logger->error(sprintf('[GeoLocationUtility] %s', $e->getMessage()));
+            throw $e;
         }
 
-        return $results[0];
-    }
+        if ($results->count() > 1) {
+            $this->logger->error(sprintf('[GeoLocationUtility] More one result ! (%s)', $address));
+            throw new \Exception();
+        }
 
-    /**
-     * @param GeocoderAddressComponent $geocoderAddressComponement
-     *
-     * @return array
-     */
-    private function getAddressComponement(GeocoderAddressComponent $geocoderAddressComponement)
-    {
-        $types = $geocoderAddressComponement->getTypes();
-        $type = array_shift($types);
-
-        return array($geocoderAddressComponement->getLongName(), $type);
+        return $results->first();
     }
 }

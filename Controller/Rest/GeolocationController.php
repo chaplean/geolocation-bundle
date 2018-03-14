@@ -21,11 +21,9 @@ class GeolocationController extends FOSRestController
     /**
      * @Annotations\Get("/geolocation")
      *
-     * @param Request $request
-     *
      * @return Response
      */
-    public function getRegionDepartmentAction(Request $request)
+    public function getRegionDepartmentAction()
     {
         $geolocation = $this->get('chaplean_geolocation.ip_location');
 
@@ -41,10 +39,10 @@ class GeolocationController extends FOSRestController
             }
         }
 
-        $geo = array(
+        $geo = [
             'region'     => $region,
             'department' => $department
-        );
+        ];
 
         return $this->handleView($this->view($geo));
     }

@@ -15,7 +15,10 @@
         }
     },
     "autoload-dev": {
-        "psr-4": { "Tests\\": "tests/" }
+        "psr-4": {
+            "Tests\\": "Tests/",
+            "Tests\\Chaplean\\Bundle\\GeolocationBundle\\Resources\\Entity\\": "Tests/Resources/Entity"
+        }
     },
     "repositories": [
         {
@@ -28,26 +31,25 @@
         "cravler/maxmind-geoip-bundle": "^1.0",
         "doctrine/doctrine-bundle": "^1.4",
         "doctrine/orm": "^2.5",
-        "egeloen/google-map-bundle": "^2.2",
         "friendsofsymfony/rest-bundle": "^2.1",
-        "jms/serializer-bundle": "^1.1 || ^2.0",
-        "sensio/framework-extra-bundle": "^2.3 || ^3.0",
+        "jms/serializer-bundle": "^2.0",
+        "sensio/framework-extra-bundle": " ^3.0",
         "symfony/assetic-bundle": "^2.3",
-        "symfony/config": "^2.8 || 3.4.*",
-        "symfony/console": "^2.8 || 3.4.*",
-        "symfony/dependency-injection": "^2.8 || 3.4.*",
-        "symfony/monolog-bundle": "^2.7 || ^3.0",
-        "symfony/twig-bundle": "^2.7 || 3.4.*",
-        "willdurand/geocoder": "^2.8"
+        "symfony/config": "^3.4",
+        "symfony/console": "^3.4",
+        "symfony/dependency-injection": "^3.4",
+        "symfony/monolog-bundle": "^3.0",
+        "symfony/twig-bundle": "^3.4",
+        "willdurand/geocoder-bundle": "^4.0"
     },
     "require-dev": {
         "chaplean/codeship-scripts": "^1.0",
         "chaplean/coding-standard": "^1.1",
-        "chaplean/unit-bundle": "^6.0",
+        "chaplean/unit-bundle": "^7.0",
         "mockery/mockery": "dev-master",
         "sensio/distribution-bundle": "^5.0",
-        "symfony/http-kernel": "^2.7 || ^3.0",
-        "symfony/var-dumper": "^2.7 || ^3.0"
+        "symfony/http-kernel": "^3.0",
+        "symfony/var-dumper": "^3.0"
     },
     "scripts": {
         "post-install-cmd": [

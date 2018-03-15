@@ -22,7 +22,7 @@ class IpLocationTest extends FunctionalTestCase
     private $location;
 
     /**
-     * @var RequestStack $requestStack
+     * @var RequestStack|\Mockery\MockInterface
      */
     private $requestStack;
 
@@ -39,6 +39,7 @@ class IpLocationTest extends FunctionalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::__construct
      * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::getCityFromIp()
      *
      * @return void
@@ -51,6 +52,7 @@ class IpLocationTest extends FunctionalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::__construct
      * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::getCityFromIp()
      *
      * @return void
@@ -62,6 +64,7 @@ class IpLocationTest extends FunctionalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::__construct
      * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::getCityFromIp()
      *
      * @return void
@@ -73,6 +76,7 @@ class IpLocationTest extends FunctionalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::__construct
      * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::getCityFromIp()
      *
      * @return void
@@ -85,6 +89,7 @@ class IpLocationTest extends FunctionalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::__construct
      * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::getCityFromIp()
      *
      * @return void
@@ -96,6 +101,7 @@ class IpLocationTest extends FunctionalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::__construct
      * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::getCityFromIp()
      *
      * @return void
@@ -107,13 +113,14 @@ class IpLocationTest extends FunctionalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::__construct
      * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::getCityFromUserIp()
      *
      * @return void
      */
     public function testGetExistingCityFromUser()
     {
-        $existingCityRequest = Request::create('', 'GET', array(), array(), array(), array('REMOTE_ADDR' => '82.226.243.129'));
+        $existingCityRequest = Request::create('', 'GET', [], [], [], ['REMOTE_ADDR' => '82.226.243.129']);
         $this->assertEquals('82.226.243.129', $existingCityRequest->getClientIp());
         $this->requestStack->shouldReceive('getCurrentRequest')
             ->andReturn($existingCityRequest);
@@ -124,13 +131,14 @@ class IpLocationTest extends FunctionalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::__construct
      * @covers \Chaplean\Bundle\GeolocationBundle\Utility\IpLocation::getCityFromUserIp()
      *
      * @return void
      */
     public function testGetNonExistingCityFromUser()
     {
-        $nonExistingCityRequest = Request::create('', 'GET', array(), array(), array(), array('REMOTE_ADDR' => '0.0.0.0'));
+        $nonExistingCityRequest = Request::create('', 'GET', [], [], [], ['REMOTE_ADDR' => '0.0.0.0']);
         $this->assertEquals('0.0.0.0', $nonExistingCityRequest->getClientIp());
         $this->requestStack->shouldReceive('getCurrentRequest')
             ->andReturn($nonExistingCityRequest);

@@ -9,13 +9,13 @@ use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 
 /**
- * GeocoderUtility.php.
+ * GeolocationUtility.php.
  *
  * @author    Valentin - Chaplean <valentin@chaplean.coop>
  * @copyright 2014 - 2015 Chaplean (http://www.chaplean.coop)
  * @since     1.18.0
  */
-class GeoLocationUtility
+class GeolocationUtility
 {
     /**
      * @var \Geocoder\Provider\GoogleMaps
@@ -104,23 +104,15 @@ class GeoLocationUtility
      */
     public function getAddress($address)
     {
-        if (empty($this->parameters['persist_entity']['address'])) {
+        $class = $this->parameters['persist_entity']['address'];
+
+        if (empty($class)) {
             throw new \Exception('Define \'persist_entity\' configuration, if you want use Address like a class !');
         }
 
         $result = $this->geocode($address);
 
-        $class = $this->parameters['persist_entity']['address'];
-        /** @var mixed $address */
-        $address = new $class();
-
-        $address->setBlock1(sprintf('%s %s', $result->getStreetNumber(), $result->getStreetName()));
-        $address->setCity($result->getLocality());
-        $address->setZipcode($result->getPostalCode());
-        $address->setLongitude($result->getCoordinates()->getLongitude());
-        $address->setLatitude($result->getCoordinates()->getLatitude());
-
-        return $address;
+        return $class::fromGeocoderAddressModel($result);
     }
 
     /**
@@ -135,12 +127,12 @@ class GeoLocationUtility
             /** @var AddressCollection $results */
             $results = $this->geocoder->geocode($address);
         } catch (\Exception $e) {
-            $this->logger->error(sprintf('[GeoLocationUtility] %s', $e->getMessage()));
+            $this->logger->error(sprintf('[GeolocationUtility] %s', $e->getMessage()));
             throw $e;
         }
 
         if ($results->count() > 1) {
-            $this->logger->error(sprintf('[GeoLocationUtility] More one result ! (%s)', $address));
+            $this->logger->error(sprintf('[GeolocationUtility] More one result ! (%s)', $address));
             throw new \Exception();
         }
 

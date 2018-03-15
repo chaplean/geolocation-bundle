@@ -87,6 +87,7 @@ class GeolocationController extends FOSRestController
         try {
             $address = $geocoder->getAddress($address);
         } catch (\Exception $e) {
+            $this->get('logger')->error(sprintf('GeolocationController:postAddressAction: %s [%s]', $e->getMessage(), $e->getTraceAsString()));
             return $this->handleView($this->view('Address not found', Response::HTTP_BAD_REQUEST));
         }
 
@@ -97,6 +98,7 @@ class GeolocationController extends FOSRestController
                 $em->persist($address);
                 $em->flush();
             } catch (\Exception $e) {
+                $this->get('logger')->error(sprintf('GeolocationController:postAddressAction: %s [%s]', $e->getMessage(), $e->getTraceAsString()));
                 return $this->handleView($this->view('Address could not be saved', Response::HTTP_INTERNAL_SERVER_ERROR));
             }
         }

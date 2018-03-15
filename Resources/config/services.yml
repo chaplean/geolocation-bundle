@@ -4,5 +4,5 @@ services:
         arguments: ['@request_stack', '@cravler_max_mind_geo_ip.service.geo_ip_service']
 
     chaplean_geolocation.geolocation:
-        class: Chaplean\Bundle\GeolocationBundle\Utility\GeoLocationUtility
+        class: Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility
         arguments: ['@bazinga_geocoder.geocoder', '@logger', '%chaplean_geolocation%']

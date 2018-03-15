@@ -336,4 +336,22 @@ class Address
                $this->latitude == $other->latitude &&
                $this->longitude == $other->longitude;
     }
+
+    /**
+     * @param \Geocoder\Model\Address $addressModel
+     *
+     * @return self
+     */
+    public static function fromGeocoderAddressModel(\Geocoder\Model\Address $addressModel) : Address
+    {
+        $address = new static();
+
+        $address->setBlock1(sprintf('%s %s', $addressModel->getStreetNumber(), $addressModel->getStreetName()));
+        $address->setCity($addressModel->getLocality());
+        $address->setZipcode($addressModel->getPostalCode());
+        $address->setLongitude($addressModel->getCoordinates()->getLongitude());
+        $address->setLatitude($addressModel->getCoordinates()->getLatitude());
+
+        return $address;
+    }
 }

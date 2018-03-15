@@ -3,7 +3,7 @@
 namespace Tests\Chaplean\Bundle\GeolocationBundle\Utility;
 
 use Chaplean\Bundle\GeolocationBundle\Entity\Address;
-use Chaplean\Bundle\GeolocationBundle\Utility\GeoLocationUtility;
+use Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility;
 use Chaplean\Bundle\UnitBundle\Test\FunctionalTestCase;
 use Geocoder\Exception\CollectionIsEmpty;
 use Geocoder\Exception\NoResult;
@@ -20,20 +20,20 @@ use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 
 /**
- * GeocoderUtilityTest.php.
+ * GeolocationUtilityTest.php.
  *
  * @author    Valentin - Chaplean <valentin@chaplean.coop>
  * @copyright 2014 - 2015 Chaplean (http://www.chaplean.coop)
  * @since     1.0.0
  */
-class GeoLocationUtilityTest extends FunctionalTestCase
+class GeolocationUtilityTest extends FunctionalTestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var GeoLocationUtility
+     * @var GeolocationUtility
      */
-    private $geolocationUtility;
+    private $GeolocationUtility;
 
     /**
      * @var GoogleMaps|MockInterface
@@ -59,11 +59,13 @@ class GeoLocationUtilityTest extends FunctionalTestCase
 
         $this->getContainer()->set('logger', $this->logger);
 
-        $this->geolocationUtility = $this->getContainer()->get('chaplean_geolocation.geolocation');
+        $this->GeolocationUtility = $this->getContainer()->get('chaplean_geolocation.geolocation');
     }
 
     /**
-     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeoLocationUtility::getLongitudeLatitudeByAddress()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::__construct
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::geocode()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::getLongitudeLatitudeByAddress()
      *
      * @return void
      */
@@ -86,14 +88,16 @@ class GeoLocationUtilityTest extends FunctionalTestCase
                 ])
             );
 
-        $result = $this->geolocationUtility->getLongitudeLatitudeByAddress('9 rue de condé, 33000, Bordeaux');
+        $result = $this->GeolocationUtility->getLongitudeLatitudeByAddress('9 rue de condé, 33000, Bordeaux');
 
         $this->assertEquals(44.8435229, round($result['latitude'], 7));
         $this->assertEquals(-0.573404, round($result['longitude'], 7));
     }
 
     /**
-     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeoLocationUtility::findLongitudeLatitudeByAddress()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::__construct
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::geocode()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::findLongitudeLatitudeByAddress()
      *
      * @return void
      * @throws \Exception
@@ -123,14 +127,16 @@ class GeoLocationUtilityTest extends FunctionalTestCase
         $address->setCity('Bordeaux');
         $address->setZipcode('33000');
 
-        $result = $this->geolocationUtility->findLongitudeLatitudeByAddress($address);
+        $result = $this->GeolocationUtility->findLongitudeLatitudeByAddress($address);
 
         $this->assertEquals(44.8435229, round($result['latitude'], 7));
         $this->assertEquals(-0.573404, round($result['longitude'], 7));
     }
 
     /**
-     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeoLocationUtility::findLongitudeLatitudeByAddress()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::__construct
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::geocode()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::findLongitudeLatitudeByAddress()
      *
      * @return void
      * @throws \Exception
@@ -163,14 +169,16 @@ class GeoLocationUtilityTest extends FunctionalTestCase
         $address->setCity('Paris La Défense');
         $address->setZipcode('92911');
 
-        $result = $this->geolocationUtility->findLongitudeLatitudeByAddress($address);
+        $result = $this->GeolocationUtility->findLongitudeLatitudeByAddress($address);
 
         $this->assertEquals(48.8896563, round($result['latitude'], 7));
         $this->assertEquals(2.2422251, round($result['longitude'], 7));
     }
 
     /**
-     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeoLocationUtility::getLongitudeLatitudeByAddress()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::__construct
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::geocode()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::getLongitudeLatitudeByAddress()
      *
      * @return void
      *
@@ -181,11 +189,13 @@ class GeoLocationUtilityTest extends FunctionalTestCase
         $this->geocoder->shouldReceive('geocode')->once()->andThrow(new NoResult());
         $this->logger->shouldReceive('error')->once();
 
-        $this->geolocationUtility->getLongitudeLatitudeByAddress(', , ');
+        $this->GeolocationUtility->getLongitudeLatitudeByAddress(', , ');
     }
 
     /**
-     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeoLocationUtility::findLongitudeLatitudeByAddress()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::__construct
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::geocode()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::findLongitudeLatitudeByAddress()
      *
      * @return void
      *
@@ -199,11 +209,13 @@ class GeoLocationUtilityTest extends FunctionalTestCase
 
         $address = new Address();
 
-        $this->geolocationUtility->findLongitudeLatitudeByAddress($address);
+        $this->GeolocationUtility->findLongitudeLatitudeByAddress($address);
     }
 
     /**
-     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeoLocationUtility::getAddress()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::__construct
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::geocode()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::getAddress()
      *
      * @return void
      */
@@ -226,7 +238,7 @@ class GeoLocationUtilityTest extends FunctionalTestCase
             ])
         );
 
-        $address = $this->geolocationUtility->getAddress('9 rue de condé, 33000, Bordeaux');
+        $address = $this->GeolocationUtility->getAddress('9 rue de condé, 33000, Bordeaux');
 
         $this->assertInstanceOf(Address::class, $address);
         $this->assertEquals('9 Rue de Condé', $address->getBlock1());
@@ -235,7 +247,7 @@ class GeoLocationUtilityTest extends FunctionalTestCase
     }
 
     /**
-     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeoLocationUtility::cleanCity()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::cleanCity()
      *
      * @dataProvider citiesProvider
      *
@@ -246,7 +258,7 @@ class GeoLocationUtilityTest extends FunctionalTestCase
      */
     public function testCleanCity($expected, $city)
     {
-        $cityCleaned = $this->geolocationUtility->cleanCity($city);
+        $cityCleaned = $this->GeolocationUtility->cleanCity($city);
 
         $this->assertEquals($expected, $cityCleaned);
     }

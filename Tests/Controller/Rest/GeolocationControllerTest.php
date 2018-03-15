@@ -159,7 +159,7 @@ class GeolocationControllerTest extends FunctionalTestCase
     public function testSaveAddressNotFoundAction()
     {
         $this->geocoder->shouldReceive('geocode')->once()->andThrow(new NoResult());
-        $this->logger->shouldReceive('error')->once();
+        $this->logger->shouldReceive('error')->twice();
 
         $this->client->request('POST', '/rest/geolocation', ['address' => ', ,']);
 

@@ -58,13 +58,8 @@ doctrine:
         connections:
             default:
                 driver:   '%database_driver%'
-                host:     '%database_host%'
-                port:     '%database_port%'
                 path:     '%database_name%'
-                user:     '%database_user%'
-                password: '%database_password%'
                 charset:  UTF8
-                server_version: 5.6
             logging: null
             profiling: null
     orm:

@@ -1,6 +1,7 @@
 imports:
     - { resource: parameters.yml }
     - { resource: '@ChapleanGeolocationBundle/Resources/config/config.yml' }
+    - { resource: '@ChapleanUnitBundle/Resources/config/config.yml' }
 
 framework:
     test: ~

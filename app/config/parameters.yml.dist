@@ -18,6 +18,6 @@ parameters:
     ruby.bin: /usr/bin/ruby
     compass.bin: /usr/bin/compass
 
-    data_fixtures_namespace: false
+    data_fixtures_namespace: Chaplean\Bundle\GeolocationBundle\
 
     chaplean_geolocation.api_key: azer

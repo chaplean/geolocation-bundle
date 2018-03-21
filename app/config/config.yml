@@ -6,7 +6,7 @@ framework:
     test: ~
     secret:          '%secret%'
     router:
-        resource: '%kernel.root_dir%/config/routing.yml'
+        resource: '%kernel.project_dir%/app/config/routing.yml'
         strict_requirements: true
     templating:
         engines: ['twig']
@@ -15,9 +15,12 @@ framework:
     trusted_proxies: ~
     session:
         # handler_id set to null will use default session handler from php.ini
-        handler_id:  ~
-    fragments:       ~
+        handler_id: session.handler.native_file
+        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
+    fragments: ~
     http_method_override: true
+    php_errors:
+        log: true
     profiler: { only_exceptions: false }
 
 # Twig Configuration
@@ -71,13 +74,13 @@ doctrine:
                     ChapleanGeolocationBundle: ~
                     DummyAddress:
                         type:      annotation
-                        dir:       '%kernel.root_dir%/../Tests/Controller/Rest'
+                        dir:       '%kernel.project_dir%/Tests/Controller/Rest'
                         prefix:    Tests\Chaplean\Bundle\GeolocationBundle\Resources\Entity\DummyAddress
                         alias:     DummyAddress
                         is_bundle: false
                     EmbeddableAddress:
                         type:      annotation
-                        dir:       '%kernel.root_dir%/../Tests/'
+                        dir:       '%kernel.project_dir%/Tests/'
                         prefix:    Tests\Chaplean\Bundle\GeolocationBundle\Resources\Entity\EmbeddableAddress
                         alias:     EmbeddableAddress
                         is_bundle: false

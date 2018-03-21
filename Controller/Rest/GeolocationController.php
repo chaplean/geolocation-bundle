@@ -98,6 +98,7 @@ class GeolocationController extends FOSRestController
                 $em->persist($address);
                 $em->flush();
             } catch (\Exception $e) {
+                echo($e->getMessage());
                 $this->get('logger')->error(sprintf('GeolocationController:postAddressAction: %s [%s]', $e->getMessage(), $e->getTraceAsString()));
                 return $this->handleView($this->view('Address could not be saved', Response::HTTP_INTERNAL_SERVER_ERROR));
             }

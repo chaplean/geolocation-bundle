@@ -17,7 +17,9 @@ composer require chaplean/geolocation-bundle
 
 Add
 ```
-            new Chaplean\Bundle\MailerBundle\ChapleanGeolocationBundle(),
+            new Cravler\MaxMindGeoIpBundle\CravlerMaxMindGeoIpBundle(),
+            new Bazinga\Bundle\GeocoderBundle\BazingaGeocoderBundle(),
+            new Chaplean\Bundle\GeolocationBundle\ChapleanGeolocationBundle(),
 ```
 
 ## 3. config.yml

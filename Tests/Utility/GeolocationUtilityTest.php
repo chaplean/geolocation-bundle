@@ -100,7 +100,6 @@ class GeolocationUtilityTest extends FunctionalTestCase
      * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::findLongitudeLatitudeByAddress()
      *
      * @return void
-     * @throws \Exception
      */
     public function testfindLongitudeLatitudeByAddressWithGoodAddress()
     {
@@ -139,7 +138,6 @@ class GeolocationUtilityTest extends FunctionalTestCase
      * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::findLongitudeLatitudeByAddress()
      *
      * @return void
-     * @throws \Exception
      */
     public function testfindLongitudeLatitudeByAddressWithSubAddressNotFound()
     {

@@ -12,16 +12,16 @@
     "autoload": {
         "psr-4": {
             "Chaplean\\Bundle\\GeolocationBundle\\": ""
-        },
-        "classmap": [
-            "app/AppKernel.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "Tests/",
             "Tests\\Chaplean\\Bundle\\GeolocationBundle\\Resources\\Entity\\": "Tests/Resources/Entity"
-        }
+        },
+        "classmap": [
+            "app/AppKernel.php"
+        ]
     },
     "repositories": [
         {

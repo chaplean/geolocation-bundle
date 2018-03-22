@@ -18,7 +18,7 @@ use Psr\Log\LoggerInterface;
 class GeolocationUtility
 {
     /**
-     * @var \Geocoder\Provider\GoogleMaps
+     * @var \Geocoder\Provider\GoogleMaps\Model\
      */
     private $geocoder;
 

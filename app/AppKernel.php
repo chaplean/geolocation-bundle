@@ -32,7 +32,7 @@ class AppKernel extends Kernel
             new Chaplean\Bundle\GeolocationBundle\ChapleanGeolocationBundle(),
             new FOS\RestBundle\FOSRestBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
-            new Bazinga\Bundle\GeocoderBundle\BazingaGeocoderBundle(),
+            new Bazinga\GeocoderBundle\BazingaGeocoderBundle(),
         ];
 
         return $bundles;

@@ -1,7 +1,8 @@
 bazinga_geocoder:
     providers:
         google_maps:
+            factory: Bazinga\GeocoderBundle\ProviderFactory\GoogleMapsFactory
             locale: fr
-            region: null
-            use_ssl: true
-            api_key: '%chaplean_geolocation.api_key%'
+            options:
+                region: null
+                api_key: '%chaplean_geolocation.api_key%'

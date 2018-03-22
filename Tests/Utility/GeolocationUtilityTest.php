@@ -55,9 +55,9 @@ class GeolocationUtilityTest extends FunctionalTestCase
         $this->geocoder = \Mockery::mock(Geocoder::class);
         $this->logger = \Mockery::mock(LoggerInterface::class);
         // Comment this line for test no breaking change in BazingaGeocoder !
-        $this->getContainer()->set('bazinga_geocoder.geocoder', $this->geocoder);
-
-        $this->getContainer()->set('logger', $this->logger);
+//        $this->getContainer()->set('bazinga_geocoder.geocoder', $this->geocoder);
+//
+//        $this->getContainer()->set('logger', $this->logger);
 
         $this->GeolocationUtility = $this->getContainer()->get('chaplean_geolocation.geolocation');
     }

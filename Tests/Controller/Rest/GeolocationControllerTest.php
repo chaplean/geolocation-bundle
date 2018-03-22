@@ -72,6 +72,8 @@ class GeolocationControllerTest extends FunctionalTestCase
         $this->geocoder->shouldReceive('geocode')->once()->andReturn(
             new AddressCollection([
                 new GeocoderAddress(
+                    '',
+                    new AdminLevelCollection(),
                     new Coordinates(44.8435229, -0.573404),
                     null,
                     '9',
@@ -79,9 +81,7 @@ class GeolocationControllerTest extends FunctionalTestCase
                     '33000',
                     'Bordeaux',
                     null,
-                    new AdminLevelCollection(),
-                    new Country('France', 'FR'),
-                    null
+                    new Country('France', 'FR')
                 )
             ])
         );

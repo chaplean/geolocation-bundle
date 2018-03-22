@@ -4,10 +4,10 @@ namespace Tests\Chaplean\Bundle\GeolocationBundle\Entity;
 
 use Chaplean\Bundle\GeolocationBundle\Entity\Address;
 use Chaplean\Bundle\UnitBundle\Test\FunctionalTestCase;
-use Geocoder\Model\Address as GeocoderAddress;
 use Geocoder\Model\AdminLevelCollection;
 use Geocoder\Model\Coordinates;
 use Geocoder\Model\Country;
+use Geocoder\Provider\GoogleMaps\Model\GoogleAddress;
 use Tests\Chaplean\Bundle\GeolocationBundle\Resources\Entity\EmbeddableAddress;
 
 /**
@@ -163,7 +163,9 @@ class AddressTest extends FunctionalTestCase
      */
     public function testFromGeocoderAddressModel()
     {
-        $address = Address::fromGeocoderAddressModel(new GeocoderAddress(
+        $address = Address::fromGeocoderAddressModel(new GoogleAddress(
+            '',
+            new AdminLevelCollection(),
             new Coordinates(44.8435229, -0.573404),
             null,
             '9',
@@ -171,7 +173,6 @@ class AddressTest extends FunctionalTestCase
             '33000',
             'Bordeaux',
             null,
-            new AdminLevelCollection(),
             new Country('France', 'FR'),
             null
         ));

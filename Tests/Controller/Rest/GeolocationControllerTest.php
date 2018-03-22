@@ -3,14 +3,12 @@
 namespace Tests\Chaplean\Bundle\GeolocationBundle\Controller\Rest;
 
 use Chaplean\Bundle\UnitBundle\Test\FunctionalTestCase;
-use Geocoder\Exception\NoResult;
-use Geocoder\Geocoder;
-use Geocoder\Model\Address as GeocoderAddress;
 use Geocoder\Model\AddressCollection;
 use Geocoder\Model\AdminLevelCollection;
 use Geocoder\Model\Coordinates;
 use Geocoder\Model\Country;
-use Geocoder\Provider\GoogleMaps;
+use Geocoder\Plugin\PluginProvider;
+use Geocoder\Provider\GoogleMaps\Model\GoogleAddress;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use Monolog\Logger;
@@ -36,7 +34,7 @@ class GeolocationControllerTest extends FunctionalTestCase
     private $client;
 
     /**
-     * @var GoogleMaps|MockInterface
+     * @var PluginProvider|MockInterface
      */
     private $geocoder;
 
@@ -54,10 +52,10 @@ class GeolocationControllerTest extends FunctionalTestCase
 
         $this->client = self::createClient();
 
-        $this->geocoder = \Mockery::mock(Geocoder::class);
+        $this->geocoder = \Mockery::mock(PluginProvider::class);
         $this->logger = \Mockery::mock(LoggerInterface::class);
         // Comment this line for test no breaking change in BazingaGeocoder !
-        $this->client->getContainer()->set('bazinga_geocoder.geocoder', $this->geocoder);
+        $this->client->getContainer()->set('bazinga_geocoder.provider.google_maps', $this->geocoder);
         $this->client->getContainer()->set('logger', $this->logger);
 
     }
@@ -69,9 +67,9 @@ class GeolocationControllerTest extends FunctionalTestCase
      */
     public function testGetLongitudeLatitudeAction()
     {
-        $this->geocoder->shouldReceive('geocode')->once()->andReturn(
+        $this->geocoder->shouldReceive('geocodeQuery')->once()->andReturn(
             new AddressCollection([
-                new GeocoderAddress(
+                new GoogleAddress(
                     '',
                     new AdminLevelCollection(),
                     new Coordinates(44.8435229, -0.573404),
@@ -81,7 +79,8 @@ class GeolocationControllerTest extends FunctionalTestCase
                     '33000',
                     'Bordeaux',
                     null,
-                    new Country('France', 'FR')
+                    new Country('France', 'FR'),
+                    null
                 )
             ])
         );
@@ -103,7 +102,7 @@ class GeolocationControllerTest extends FunctionalTestCase
      */
     public function testGetLongitudeLatitudeActionWithNotFound()
     {
-        $this->geocoder->shouldReceive('geocode')->once()->andThrow(new NoResult());
+        $this->geocoder->shouldReceive('geocodeQuery')->once()->andReturn(new AddressCollection([]));
 
         $this->client->request('GET', '/rest/geolocation/' . urlencode(', ,'));
 
@@ -120,9 +119,11 @@ class GeolocationControllerTest extends FunctionalTestCase
      */
     public function testSaveAddressAction()
     {
-        $this->geocoder->shouldReceive('geocode')->once()->andReturn(
+        $this->geocoder->shouldReceive('geocodeQuery')->once()->andReturn(
             new AddressCollection([
-                new GeocoderAddress(
+                new GoogleAddress(
+                    '',
+                    new AdminLevelCollection(),
                     new Coordinates(44.8435229, -0.573404),
                     null,
                     '9',
@@ -130,7 +131,6 @@ class GeolocationControllerTest extends FunctionalTestCase
                     '33000',
                     'Bordeaux',
                     null,
-                    new AdminLevelCollection(),
                     new Country('France', 'FR'),
                     null
                 )
@@ -158,7 +158,7 @@ class GeolocationControllerTest extends FunctionalTestCase
      */
     public function testSaveAddressNotFoundAction()
     {
-        $this->geocoder->shouldReceive('geocode')->once()->andThrow(new NoResult());
+        $this->geocoder->shouldReceive('geocodeQuery')->once()->andReturn(new AddressCollection([]));
         $this->logger->shouldReceive('error')->twice();
 
         $this->client->request('POST', '/rest/geolocation', ['address' => ', ,']);

@@ -5,15 +5,12 @@ namespace Tests\Chaplean\Bundle\GeolocationBundle\Utility;
 use Chaplean\Bundle\GeolocationBundle\Entity\Address;
 use Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility;
 use Chaplean\Bundle\UnitBundle\Test\FunctionalTestCase;
-use Geocoder\Exception\CollectionIsEmpty;
-use Geocoder\Exception\NoResult;
-use Geocoder\Geocoder;
-use Geocoder\Model\Address as GeocoderAddress;
 use Geocoder\Model\AddressCollection;
 use Geocoder\Model\AdminLevelCollection;
 use Geocoder\Model\Coordinates;
 use Geocoder\Model\Country;
-use Geocoder\Provider\GoogleMaps;
+use Geocoder\Plugin\PluginProvider;
+use Geocoder\Provider\GoogleMaps\Model\GoogleAddress;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use Monolog\Logger;
@@ -36,7 +33,7 @@ class GeolocationUtilityTest extends FunctionalTestCase
     private $GeolocationUtility;
 
     /**
-     * @var GoogleMaps|MockInterface
+     * @var PluginProvider|MockInterface
      */
     private $geocoder;
 
@@ -47,17 +44,18 @@ class GeolocationUtilityTest extends FunctionalTestCase
 
     /**
      * @return void
+     * @throws
      */
     public function setUp()
     {
         parent::setUp();
 
-        $this->geocoder = \Mockery::mock(Geocoder::class);
+        $this->geocoder = \Mockery::mock(PluginProvider::class);
         $this->logger = \Mockery::mock(LoggerInterface::class);
         // Comment this line for test no breaking change in BazingaGeocoder !
-//        $this->getContainer()->set('bazinga_geocoder.geocoder', $this->geocoder);
-//
-//        $this->getContainer()->set('logger', $this->logger);
+        $this->getContainer()->set('bazinga_geocoder.provider.google_maps', $this->geocoder);
+
+        $this->getContainer()->set('logger', $this->logger);
 
         $this->GeolocationUtility = $this->getContainer()->get('chaplean_geolocation.geolocation');
     }
@@ -68,12 +66,15 @@ class GeolocationUtilityTest extends FunctionalTestCase
      * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::getLongitudeLatitudeByAddress()
      *
      * @return void
+     * @throws
      */
     public function testGetLongitudeLatitudeByAddressWithGoodAddress()
     {
-        $this->geocoder->shouldReceive('geocode')->once()->andReturn(
+        $this->geocoder->shouldReceive('geocodeQuery')->once()->andReturn(
                 new AddressCollection([
-                    new GeocoderAddress(
+                    new GoogleAddress(
+                        '',
+                        new AdminLevelCollection(),
                         new Coordinates(44.8435229, -0.573404),
                         null,
                         '9',
@@ -81,7 +82,6 @@ class GeolocationUtilityTest extends FunctionalTestCase
                         '33000',
                         'Bordeaux',
                         null,
-                        new AdminLevelCollection(),
                         new Country('France', 'FR'),
                         null
                     )
@@ -100,12 +100,15 @@ class GeolocationUtilityTest extends FunctionalTestCase
      * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::findLongitudeLatitudeByAddress()
      *
      * @return void
+     * @throws
      */
     public function testfindLongitudeLatitudeByAddressWithGoodAddress()
     {
-        $this->geocoder->shouldReceive('geocode')->once()->andReturn(
+        $this->geocoder->shouldReceive('geocodeQuery')->once()->andReturn(
             new AddressCollection([
-                new GeocoderAddress(
+                new GoogleAddress(
+                    '',
+                    new AdminLevelCollection(),
                     new Coordinates(44.8435229, -0.573404),
                     null,
                     '9',
@@ -113,7 +116,6 @@ class GeolocationUtilityTest extends FunctionalTestCase
                     '33000',
                     'Bordeaux',
                     null,
-                    new AdminLevelCollection(),
                     new Country('France', 'FR'),
                     null
                 )
@@ -138,23 +140,25 @@ class GeolocationUtilityTest extends FunctionalTestCase
      * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::findLongitudeLatitudeByAddress()
      *
      * @return void
+     * @throws
      */
     public function testfindLongitudeLatitudeByAddressWithSubAddressNotFound()
     {
-        $this->geocoder->shouldReceive('geocode')->once()->andThrow(new NoResult());
+        $this->geocoder->shouldReceive('geocodeQuery')->once()->andReturn(new AddressCollection([]));
         $this->logger->shouldReceive('warning')->once();
 
-        $this->geocoder->shouldReceive('geocode')->once()->andReturn(
+        $this->geocoder->shouldReceive('geocodeQuery')->once()->andReturn(
             new AddressCollection([
-                new GeocoderAddress(
+                new GoogleAddress(
+                    '',
+                    new AdminLevelCollection(),
                     new Coordinates(48.8896563, 2.2422251),
                     null,
-                    '1',
-                    'Place de la Pyramide',
-                    '92800',
-                    'Puteaux',
+                    '9',
+                    'Rue de Condé',
+                    '33000',
+                    'Bordeaux',
                     null,
-                    new AdminLevelCollection(),
                     new Country('France', 'FR'),
                     null
                 )
@@ -180,11 +184,11 @@ class GeolocationUtilityTest extends FunctionalTestCase
      *
      * @return void
      *
-     * @expectedException \Geocoder\Exception\NoResult
+     * @expectedException \Exception
      */
     public function testGetLongitudeLatitudeByAddressWithBadAddress()
     {
-        $this->geocoder->shouldReceive('geocode')->once()->andThrow(new NoResult());
+        $this->geocoder->shouldReceive('geocodeQuery')->once()->andReturn(new AddressCollection([]));
         $this->logger->shouldReceive('error')->once();
 
         $this->GeolocationUtility->getLongitudeLatitudeByAddress(', , ');
@@ -197,11 +201,11 @@ class GeolocationUtilityTest extends FunctionalTestCase
      *
      * @return void
      *
-     * @expectedException \Geocoder\Exception\CollectionIsEmpty
+     * @expectedException \Exception
      */
     public function testGetLongitudeLatitudeByAddressWithNotFoundAddress()
     {
-        $this->geocoder->shouldReceive('geocode')->twice()->andThrow(new CollectionIsEmpty());
+        $this->geocoder->shouldReceive('geocodeQuery')->twice()->andReturn(new AddressCollection([]));
         $this->logger->shouldReceive('error')->twice();
         $this->logger->shouldReceive('warning')->twice();
 
@@ -216,12 +220,15 @@ class GeolocationUtilityTest extends FunctionalTestCase
      * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::getAddress()
      *
      * @return void
+     * @throws
      */
     public function testGetAddress()
     {
-        $this->geocoder->shouldReceive('geocode')->once()->andReturn(
+        $this->geocoder->shouldReceive('geocodeQuery')->once()->andReturn(
             new AddressCollection([
-                new GeocoderAddress(
+                new GoogleAddress(
+                    '',
+                    new AdminLevelCollection(),
                     new Coordinates(44.8435229, -0.573404),
                     null,
                     '9',
@@ -229,7 +236,6 @@ class GeolocationUtilityTest extends FunctionalTestCase
                     '33000',
                     'Bordeaux',
                     null,
-                    new AdminLevelCollection(),
                     new Country('France', 'FR'),
                     null
                 )

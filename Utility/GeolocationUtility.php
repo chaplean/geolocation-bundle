@@ -5,6 +5,9 @@ namespace Chaplean\Bundle\GeolocationBundle\Utility;
 use Chaplean\Bundle\GeolocationBundle\Entity\Address;
 use Geocoder\Geocoder;
 use Geocoder\Model\AddressCollection;
+use Geocoder\Plugin\PluginProvider;
+use Geocoder\Provider\GoogleMaps\Model\GoogleAddress;
+use Geocoder\Query\GeocodeQuery;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 
@@ -37,7 +40,7 @@ class GeolocationUtility
      * @param LoggerInterface $logger
      * @param array           $parameters
      */
-    public function __construct(Geocoder $geocoder, LoggerInterface $logger, array $parameters)
+    public function __construct(PluginProvider $geocoder, LoggerInterface $logger, array $parameters)
     {
         $this->geocoder = $geocoder;
         $this->parameters = $parameters;
@@ -118,20 +121,23 @@ class GeolocationUtility
     /**
      * @param string $address
      *
-     * @return \Geocoder\Model\Address
+     * @return GoogleAddress
      * @throws \Exception
      */
     public function geocode($address)
     {
         try {
             /** @var AddressCollection $results */
-            $results = $this->geocoder->geocode($address);
+            $results = $this->geocoder->geocodeQuery(GeocodeQuery::create($address));
         } catch (\Exception $e) {
             $this->logger->error(sprintf('[GeolocationUtility] %s', $e->getMessage()));
             throw $e;
         }
 
-        if ($results->count() > 1) {
+        if ($results->isEmpty()) {
+            $this->logger->error(sprintf('[GeolocationUtility] Zero results ! (%s)', $address));
+            throw new \Exception();
+        } elseif ($results->count() > 1) {
             $this->logger->error(sprintf('[GeolocationUtility] More one result ! (%s)', $address));
             throw new \Exception();
         }

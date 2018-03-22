@@ -5,10 +5,12 @@ namespace Tests\Chaplean\Bundle\GeolocationBundle\Utility;
 use Chaplean\Bundle\GeolocationBundle\Entity\Address;
 use Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility;
 use Chaplean\Bundle\UnitBundle\Test\FunctionalTestCase;
+use Geocoder\Exception\InvalidCredentials;
 use Geocoder\Model\AddressCollection;
 use Geocoder\Model\AdminLevelCollection;
 use Geocoder\Model\Coordinates;
 use Geocoder\Model\Country;
+use Geocoder\Model\Address as GeocoderAddress;
 use Geocoder\Plugin\PluginProvider;
 use Geocoder\Provider\GoogleMaps\Model\GoogleAddress;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -265,6 +267,51 @@ class GeolocationUtilityTest extends FunctionalTestCase
         $cityCleaned = $this->GeolocationUtility->cleanCity($city);
 
         $this->assertEquals($expected, $cityCleaned);
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::geocode
+     *
+     * @return void
+     * @expectedException \Geocoder\Exception\InvalidArgument
+     * @throws
+     */
+    public function testGeocodeInvalidArgument()
+    {
+        $this->logger->shouldReceive('error')->once();
+
+        $this->GeolocationUtility->geocode('');
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::geocode
+     *
+     * @return void
+     * @expectedException \Geocoder\Exception\InvalidCredentials
+     */
+    public function testGeocodeInvalidCredentical()
+    {
+        $this->geocoder->shouldReceive('geocodeQuery')->once()->andThrow(new InvalidCredentials());
+        $this->logger->shouldReceive('error')->once();
+
+        $this->GeolocationUtility->geocode(', ');
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::geocode
+     *
+     * @return void
+     * @expectedException \Exception
+     */
+    public function testGeocodeMoreOneResult()
+    {
+        $this->geocoder->shouldReceive('geocodeQuery')->once()->andReturn(new AddressCollection([
+            \Mockery::mock(GeocoderAddress::class),
+            \Mockery::mock(GeocoderAddress::class),
+        ]));
+        $this->logger->shouldReceive('error')->once();
+
+        $this->GeolocationUtility->geocode('vzmldkmlz ');
     }
 
     /**

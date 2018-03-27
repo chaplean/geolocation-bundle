@@ -3,7 +3,7 @@
 namespace Tests\Chaplean\Bundle\GeolocationBundle;
 
 use Chaplean\Bundle\GeolocationBundle\Entity\Address;
-use Chaplean\Bundle\UnitBundle\Test\LogicalTestCase;
+use Chaplean\Bundle\UnitBundle\Test\FunctionalTestCase;
 use Tests\Chaplean\Bundle\GeolocationBundle\Resources\Entity\EmbeddableAddress;
 
 /**
@@ -13,7 +13,7 @@ use Tests\Chaplean\Bundle\GeolocationBundle\Resources\Entity\EmbeddableAddress;
  * @copyright 2014 - 2015 Chaplean (http://www.chaplean.coop)
  * @since     3.0.0
  */
-class EmbeddableAddressTest extends LogicalTestCase
+class EmbeddableAddressTest extends FunctionalTestCase
 {
     /**
      * @return void

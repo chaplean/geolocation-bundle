@@ -3,7 +3,11 @@
 namespace Tests\Chaplean\Bundle\GeolocationBundle\Entity;
 
 use Chaplean\Bundle\GeolocationBundle\Entity\Address;
-use Chaplean\Bundle\UnitBundle\Test\LogicalTestCase;
+use Chaplean\Bundle\UnitBundle\Test\FunctionalTestCase;
+use Geocoder\Model\AdminLevelCollection;
+use Geocoder\Model\Coordinates;
+use Geocoder\Model\Country;
+use Geocoder\Provider\GoogleMaps\Model\GoogleAddress;
 use Tests\Chaplean\Bundle\GeolocationBundle\Resources\Entity\EmbeddableAddress;
 
 /**
@@ -14,7 +18,7 @@ use Tests\Chaplean\Bundle\GeolocationBundle\Resources\Entity\EmbeddableAddress;
  * @copyright 2014 - 2017 Chaplean (http://www.chaplean.coop)
  * @since     4.0.0
  */
-class AddressTest extends LogicalTestCase
+class AddressTest extends FunctionalTestCase
 {
     /**
      * @return array
@@ -30,6 +34,7 @@ class AddressTest extends LogicalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::setZipcode()
      * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::getZipcode()
      *
      * @dataProvider integerZipcodeToStringProvider
@@ -53,16 +58,16 @@ class AddressTest extends LogicalTestCase
     public function addressToExpectedStringsProvider()
     {
         return [
-            ['block1', null, null, null, null,      'city', 'block1, city'],
-            ['block1', 'block2', null, null, null,  'city', 'block1 block2, city'],
-            ['block1', null, 'block3', null, null,  'city', 'block1 block3, city'],
-            ['block1', null, null, 1, null, 'city', 'block1 1, city'],
-            ['block1', null, null, null, 1000,      'city', 'block1, 01000 city'],
+            ['block1', null,     null,     null, null, 'city', 'block1, city'],
+            ['block1', 'block2', null,     null, null, 'city', 'block1 block2, city'],
+            ['block1', null,     'block3', null, null, 'city', 'block1 block3, city'],
+            ['block1', null,     null,     1,    null, 'city', 'block1 1, city'],
+            ['block1', null,     null,     null, 1000, 'city', 'block1, 01000 city'],
         ];
     }
 
     /**
-     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::getAddress()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address
      *
      * @dataProvider addressToExpectedStringsProvider
      *
@@ -90,6 +95,10 @@ class AddressTest extends LogicalTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::getAddress()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::setBlock1()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::setCity()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::getAddress()
      * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::constructEmpty()
      *
      * @return void
@@ -121,6 +130,8 @@ class AddressTest extends LogicalTestCase
 
     /**
      * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::isEqual()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::setLatitude()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::setLongitude()
      *
      * @return void
      */
@@ -132,5 +143,45 @@ class AddressTest extends LogicalTestCase
         $address1->setLongitude(1);
 
         $this->assertFalse($address1->isEqual($address2));
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::fromGeocoderAddressModel()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::setBlock1()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::setCity()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::setZipcode()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::setLongitude()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::setLatitude()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::getBlock1()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::getBlock2()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::getCity()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::getZipcode()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::getLongitude()
+     * @covers \Chaplean\Bundle\GeolocationBundle\Entity\Address::getLatitude()
+     *
+     * @return void
+     */
+    public function testFromGeocoderAddressModel()
+    {
+        $address = Address::fromGeocoderAddressModel(new GoogleAddress(
+            '',
+            new AdminLevelCollection(),
+            new Coordinates(44.8435229, -0.573404),
+            null,
+            '9',
+            'Rue de Condé',
+            '33000',
+            'Bordeaux',
+            null,
+            new Country('France', 'FR'),
+            null
+        ));
+
+        $this->assertEquals('9 Rue de Condé', $address->getBlock1());
+        $this->assertNull($address->getBlock2());
+        $this->assertEquals('33000', $address->getZipcode());
+        $this->assertEquals('Bordeaux', $address->getCity());
+        $this->assertEquals(44.8435229, $address->getLatitude());
+        $this->assertEquals(-0.573404, $address->getLongitude());
     }
 }

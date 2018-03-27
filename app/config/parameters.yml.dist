@@ -1,8 +1,8 @@
 parameters:
-    database_driver: pdo_mysql
+    database_driver: pdo_sqlite
     database_host: mysql
     database_port: 3306
-    database_name: test_database
+    database_name: '%kernel.cache_dir%/test.db'
     database_user: root
     database_password: root
 
@@ -18,6 +18,6 @@ parameters:
     ruby.bin: /usr/bin/ruby
     compass.bin: /usr/bin/compass
 
-    data_fixtures_namespace: false
+    data_fixtures_namespace: Chaplean\Bundle\GeolocationBundle\
 
     chaplean_geolocation.api_key: azer

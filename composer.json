@@ -15,7 +15,13 @@
         }
     },
     "autoload-dev": {
-        "psr-4": { "Tests\\": "tests/" }
+        "psr-4": {
+            "Tests\\": "Tests/",
+            "Tests\\Chaplean\\Bundle\\GeolocationBundle\\Resources\\Entity\\": "Tests/Resources/Entity"
+        },
+        "classmap": [
+            "app/AppKernel.php"
+        ]
     },
     "repositories": [
         {
@@ -26,29 +32,31 @@
     "require": {
         "php": ">=7.0.8",
         "cravler/maxmind-geoip-bundle": "^1.0",
-        "doctrine/doctrine-bundle": "^1.4",
-        "doctrine/orm": "^2.4.8",
-        "egeloen/google-map-bundle": "^2.0",
+        "doctrine/doctrine-bundle": "^1.6",
+        "doctrine/orm": "^2.5",
         "friendsofsymfony/rest-bundle": "^2.1",
-        "jms/serializer-bundle": "^1.1 || ^2.0",
-        "sensio/framework-extra-bundle": "^2.3 || ^3.0",
+        "jms/serializer-bundle": "^2.0",
+        "sensio/framework-extra-bundle": " ^5.0.0",
         "symfony/assetic-bundle": "^2.3",
-        "symfony/config": "^2.7",
-        "symfony/console": "^2.7",
-        "symfony/dependency-injection": "^2.7",
-        "symfony/monolog-bundle": "^2.7 || ^3.0",
-        "symfony/twig-bundle": "^2.7",
-        "willdurand/geocoder": "^2.8"
+        "symfony/config": "^3.4 || ^4.0",
+        "symfony/console": "^3.4 || ^4.0",
+        "symfony/dependency-injection": "^3.4 || ^4.0",
+        "symfony/monolog-bundle": "^3.1",
+        "symfony/twig-bundle": "^3.4",
+        "willdurand/geocoder-bundle": "^5.0",
+        "geocoder-php/google-maps-provider": "^4.0",
+        "php-http/message": "^1.6",
+        "php-http/guzzle6-adapter": "^1.1"
     },
     "require-dev": {
         "chaplean/codeship-scripts": "^1.0",
         "chaplean/coding-standard": "^1.1",
-        "chaplean/unit-bundle": "^6.0",
+        "chaplean/unit-bundle": "^7.0",
         "mockery/mockery": "dev-master",
-        "satooshi/php-coveralls": "dev-master",
         "sensio/distribution-bundle": "^5.0",
-        "symfony/http-kernel": "^2.7 || ^3.0",
-        "symfony/var-dumper": "^2.7 || ^3.0"
+        "symfony/http-kernel": "^3.0 || ^4.0",
+        "symfony/var-dumper": "^3.0",
+        "symfony/phpunit-bridge": "^4.0"
     },
     "scripts": {
         "post-install-cmd": [

@@ -2,6 +2,7 @@
 
 namespace Chaplean\Bundle\GeolocationBundle\DependencyInjection;
 
+use Chaplean\Bundle\GeolocationBundle\Entity\Address;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -23,7 +24,7 @@ class Configuration implements ConfigurationInterface
         $rootNode->children()
             ->arrayNode('persist_entity')
                 ->children()
-                    ->scalarNode('address')->defaultNull()->end()
+                    ->scalarNode('address')->defaultValue(Address::class)->end()
                 ->end()
             ->end();
 

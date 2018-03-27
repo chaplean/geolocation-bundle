@@ -2,16 +2,20 @@
 
 namespace Tests\Chaplean\Bundle\GeolocationBundle\Controller\Rest;
 
-use Chaplean\Bundle\UnitBundle\Test\LogicalTestCase;
-use Geocoder\Geocoder;
-use Ivory\GoogleMap\Base\Bound;
-use Ivory\GoogleMap\Base\Coordinate;
-use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderAddressComponent;
-use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderGeometry;
-use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderResponse;
-use Ivory\GoogleMap\Services\Geocoding\Result\GeocoderResult;
+use Chaplean\Bundle\UnitBundle\Test\FunctionalTestCase;
+use Geocoder\Model\AddressCollection;
+use Geocoder\Model\AdminLevelCollection;
+use Geocoder\Model\Coordinates;
+use Geocoder\Model\Country;
+use Geocoder\Plugin\PluginProvider;
+use Geocoder\Provider\GoogleMaps\Model\GoogleAddress;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Mockery\MockInterface;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Client;
+
 
 /**
  * GeolocationControllerTest.php.
@@ -20,17 +24,24 @@ use Symfony\Component\HttpKernel\Client;
  * @copyright 2014 - 2015 Chaplean (http://www.chaplean.coop)
  * @since     1.0.0
  */
-class GeolocationControllerTest extends LogicalTestCase
+class GeolocationControllerTest extends FunctionalTestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var Client
      */
     private $client;
 
     /**
-     * @var Geocoder
+     * @var PluginProvider|MockInterface
      */
-    private $ivoryGeocoderMock;
+    private $geocoder;
+
+    /**
+     * @var Logger|MockInterface
+     */
+    private $logger;
 
     /**
      * @return void
@@ -39,11 +50,14 @@ class GeolocationControllerTest extends LogicalTestCase
     {
         parent::setUp();
 
-        $this->client = static::createClient();
+        $this->client = self::createClient();
 
-        $this->ivoryGeocoderMock = \Mockery::mock('Ivory\GoogleMap\Services\Geocoding\Geocoder');
-        $this->client->getContainer()
-            ->set('ivory_google_map.geocoder', $this->ivoryGeocoderMock);
+        $this->geocoder = \Mockery::mock(PluginProvider::class);
+        $this->logger = \Mockery::mock(LoggerInterface::class);
+        // Comment this line for test no breaking change in BazingaGeocoder !
+        $this->client->getContainer()->set('bazinga_geocoder.provider.google_maps', $this->geocoder);
+        $this->client->getContainer()->set('logger', $this->logger);
+
     }
 
     /**
@@ -53,40 +67,32 @@ class GeolocationControllerTest extends LogicalTestCase
      */
     public function testGetLongitudeLatitudeAction()
     {
-        $this->ivoryGeocoderMock->shouldReceive('geocode')
-            ->andReturn(
-                new GeocoderResponse(
-                    array(
-                        new GeocoderResult(
-                            array(),
-                            '9 Rue de Condé, 33000 Bordeaux, France',
-                            new GeocoderGeometry(
-                                new Coordinate(44.8435849, -0.5733138, true),
-                                'ROOFTOP',
-                                new Bound(
-                                    new Coordinate(44.8435849, -0.5733138, true),
-                                    new Coordinate(44.8435849, -0.5733138, true),
-                                    array()
-                                ),
-                                null
-                            ),
-                            array(
-                                'street_address'
-                            ),
-                            null
-                        ),
-                    ), 'OK'
+        $this->geocoder->shouldReceive('geocodeQuery')->once()->andReturn(
+            new AddressCollection([
+                new GoogleAddress(
+                    '',
+                    new AdminLevelCollection(),
+                    new Coordinates(44.8435229, -0.573404),
+                    null,
+                    '9',
+                    'Rue de Condé',
+                    '33000',
+                    'Bordeaux',
+                    null,
+                    new Country('France', 'FR'),
+                    null
                 )
-            );
+            ])
+        );
 
         $this->client->request('GET', '/rest/geolocation/' . urlencode('9 rue de condé, 33000, Bordeaux'));
 
         $response = $this->client->getResponse();
         $response = json_decode($response->getContent(), true);
 
-        static::assertEquals(array('longitude', 'latitude'), array_keys($response));
-        static::assertEquals(-0.5733138, round($response['longitude'], 7));
-        static::assertEquals(44.8435849, round($response['latitude'], 7));
+        static::assertEquals(['longitude', 'latitude'], array_keys($response));
+        static::assertEquals(-0.573404, round($response['longitude'], 7));
+        static::assertEquals(44.8435229, round($response['latitude'], 7));
     }
 
     /**
@@ -96,8 +102,7 @@ class GeolocationControllerTest extends LogicalTestCase
      */
     public function testGetLongitudeLatitudeActionWithNotFound()
     {
-        $this->ivoryGeocoderMock->shouldReceive('geocode')
-            ->andReturn(new GeocoderResponse(array(), 'ZERO_RESULTS'));
+        $this->geocoder->shouldReceive('geocodeQuery')->once()->andReturn(new AddressCollection([]));
 
         $this->client->request('GET', '/rest/geolocation/' . urlencode(', ,'));
 
@@ -114,41 +119,25 @@ class GeolocationControllerTest extends LogicalTestCase
      */
     public function testSaveAddressAction()
     {
-        $this->ivoryGeocoderMock->shouldReceive('geocode')
-            ->andReturn(
-                new GeocoderResponse(
-                    array(
-                        new GeocoderResult(
-                            array(
-                                new GeocoderAddressComponent('9', '9', array('street_number')),
-                                new GeocoderAddressComponent('Rue de Condé', 'Rue de Condé', array('route')),
-                                new GeocoderAddressComponent('Bordeaux', 'Bordeaux', array('locality', 'political')),
-                                new GeocoderAddressComponent('Gironde', 'Gironde', array('administrative_area_level_2', 'political')),
-                                new GeocoderAddressComponent('Aquitaine', 'Aquitaine', array('administrative_area_level_1', 'political')),
-                                new GeocoderAddressComponent('France', 'FR', array('country', 'political')),
-                                new GeocoderAddressComponent('33000', '33000', array('postal_code')),
-                            ),
-                            '9 Rue de Condé, 33000 Bordeaux, France',
-                            new GeocoderGeometry(
-                                new Coordinate(44.8435849, -0.5733138, true),
-                                'ROOFTOP',
-                                new Bound(
-                                    new Coordinate(44.8435849, -0.5733138, true),
-                                    new Coordinate(44.8435849, -0.5733138, true),
-                                    array()
-                                ),
-                                null
-                            ),
-                            array(
-                                'street_address'
-                            ),
-                            null
-                        ),
-                    ), 'OK'
+        $this->geocoder->shouldReceive('geocodeQuery')->once()->andReturn(
+            new AddressCollection([
+                new GoogleAddress(
+                    '',
+                    new AdminLevelCollection(),
+                    new Coordinates(44.8435229, -0.573404),
+                    null,
+                    '9',
+                    'Rue de Condé',
+                    '33000',
+                    'Bordeaux',
+                    null,
+                    new Country('France', 'FR'),
+                    null
                 )
-            );
+            ])
+        );
 
-        $this->client->request('POST', '/rest/geolocation', array('address' => '9 rue de Condé, 33000, Bordeaux'));
+        $this->client->request('POST', '/rest/geolocation', ['address' => '9 rue de Condé, 33000, Bordeaux']);
 
         $response = $this->client->getResponse();
         $content = json_decode($response->getContent(), true);
@@ -169,10 +158,10 @@ class GeolocationControllerTest extends LogicalTestCase
      */
     public function testSaveAddressNotFoundAction()
     {
-        $this->ivoryGeocoderMock->shouldReceive('geocode')
-            ->andReturn(new GeocoderResponse(array(), 'ZERO_RESULTS'));
+        $this->geocoder->shouldReceive('geocodeQuery')->once()->andReturn(new AddressCollection([]));
+        $this->logger->shouldReceive('error')->twice();
 
-        $this->client->request('POST', '/rest/geolocation', array('address' => ', ,'));
+        $this->client->request('POST', '/rest/geolocation', ['address' => ', ,']);
 
         $response = $this->client->getResponse();
 
@@ -190,11 +179,11 @@ class GeolocationControllerTest extends LogicalTestCase
         $this->client->request(
             'GET',
             '/rest/geolocation',
-            array(),
-            array(),
-            array(
+            [],
+            [],
+            [
                 'REMOTE_ADDR' => '82.226.243.129'
-            )
+            ]
         );
 
         $response = $this->client->getResponse();

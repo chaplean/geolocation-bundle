@@ -1,5 +1,6 @@
 <?php
 
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
@@ -17,7 +18,7 @@ class AppKernel extends Kernel
      */
     public function registerBundles()
     {
-        $bundles = array(
+        $bundles = [
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
@@ -29,10 +30,10 @@ class AppKernel extends Kernel
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Cravler\MaxMindGeoIpBundle\CravlerMaxMindGeoIpBundle(),
             new Chaplean\Bundle\GeolocationBundle\ChapleanGeolocationBundle(),
-            new Ivory\GoogleMapBundle\IvoryGoogleMapBundle(),
             new FOS\RestBundle\FOSRestBundle(),
-            new JMS\SerializerBundle\JMSSerializerBundle()
-        );
+            new JMS\SerializerBundle\JMSSerializerBundle(),
+            new Bazinga\GeocoderBundle\BazingaGeocoderBundle(),
+        ];
 
         return $bundles;
     }
@@ -65,9 +66,18 @@ class AppKernel extends Kernel
      * @param LoaderInterface $loader Resource loader.
      *
      * @return void
+     * @throws \Exception
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
+        $loader->load(
+            function (ContainerBuilder $container) {
+                $container->setParameter('container.autowiring.strict_mode', true);
+                $container->setParameter('container.dumper.inline_class_loader', true);
+                $container->addObjectResource($this);
+            }
+        );
+
         $loader->load(__DIR__ . '/config/config.yml');
     }
 }

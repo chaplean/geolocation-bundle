@@ -1,19 +1,8 @@
-parameters:
-    google_map.api_key: '%chaplean_geolocation.api_key%'
-
-ivory_google_map:
-    geocoder:
-        # Enable the service
-        enabled: true
-
-        # Geocoder class
-        class: Ivory\GoogleMap\Services\Geocoding\Geocoder
-        provider:
-            # Provider class
-            class: Chaplean\Bundle\GeolocationBundle\Provider\GeocoderProvider
-
-            # API key used by the provider
-            api_key: '%chaplean_geolocation.api_key%'
-
-            # Locale used by the provider
+bazinga_geocoder:
+    providers:
+        google_maps:
+            factory: Bazinga\GeocoderBundle\ProviderFactory\GoogleMapsFactory
             locale: fr
+            options:
+                region: null
+                api_key: '%chaplean_geolocation.api_key%'

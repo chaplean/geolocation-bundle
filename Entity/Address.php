@@ -4,6 +4,7 @@ namespace Chaplean\Bundle\GeolocationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Address
@@ -18,6 +19,11 @@ class Address
      * @ORM\Column(type="string", length=200, nullable=false, name="block1")
      *
      * @JMS\Groups({"address_block1", "address_all"})
+     *
+     * @Assert\NotBlank(
+     *     message="general.not_blank",
+     *     groups={"Default"}
+     * )
      */
     protected $block1;
 
@@ -54,6 +60,11 @@ class Address
      * @ORM\Column(type="string", length=60, nullable=false, name="city_complement")
      *
      * @JMS\Groups({"address_city", "address_all"})
+     *
+     * @Assert\NotBlank(
+     *     message="general.not_blank",
+     *     groups={"Default"}
+     * )
      */
     protected $city;
 
@@ -64,6 +75,11 @@ class Address
      *
      * @JMS\Groups({"address_zipcode", "address_all"})
      * @JMS\Accessor(getter="getZipcode",setter="setZipcode")
+     *
+     * @Assert\NotBlank(
+     *     message="general.not_blank",
+     *     groups={"Default"}
+     * )
      */
     protected $zipcode;
 

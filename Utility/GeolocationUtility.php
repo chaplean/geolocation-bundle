@@ -8,6 +8,7 @@ use Geocoder\Model\AddressCollection;
 use Geocoder\Plugin\PluginProvider;
 use Geocoder\Provider\GoogleMaps\Model\GoogleAddress;
 use Geocoder\Query\GeocodeQuery;
+use Geocoder\Query\ReverseQuery;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 
@@ -139,6 +140,31 @@ class GeolocationUtility
             throw new \Exception();
         } elseif ($results->count() > 1) {
             $this->logger->error(sprintf('[GeolocationUtility] More one result ! (%s)', $address));
+            throw new \Exception();
+        }
+
+        return $results->first();
+    }
+
+    /**
+     * @param float $latitude
+     * @param float $longitude
+     *
+     * @return GoogleAddress
+     * @throws \Exception
+     */
+    public function geocodeFromCoordinates($latitude, $longitude)
+    {
+        try {
+            /** @var AddressCollection $results */
+            $results = $this->geocoder->reverseQuery(ReverseQuery::fromCoordinates($latitude, $longitude));
+        } catch (\Exception $e) {
+            $this->logger->error(sprintf('[GeolocationUtility] %s', $e->getMessage()));
+            throw $e;
+        }
+
+        if ($results->isEmpty()) {
+            $this->logger->error(sprintf('[GeolocationUtility] Zero results ! (%f, %f)', $latitude, $longitude));
             throw new \Exception();
         }
 

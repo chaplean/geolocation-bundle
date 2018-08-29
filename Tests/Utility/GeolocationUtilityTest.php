@@ -32,7 +32,7 @@ class GeolocationUtilityTest extends FunctionalTestCase
     /**
      * @var GeolocationUtility
      */
-    private $GeolocationUtility;
+    private $geolocationUtility;
 
     /**
      * @var PluginProvider|MockInterface
@@ -59,7 +59,7 @@ class GeolocationUtilityTest extends FunctionalTestCase
 
         $this->getContainer()->set('logger', $this->logger);
 
-        $this->GeolocationUtility = $this->getContainer()->get('chaplean_geolocation.geolocation');
+        $this->geolocationUtility = $this->getContainer()->get('chaplean_geolocation.geolocation');
     }
 
     /**
@@ -90,7 +90,7 @@ class GeolocationUtilityTest extends FunctionalTestCase
                 ])
             );
 
-        $result = $this->GeolocationUtility->getLongitudeLatitudeByAddress('9 rue de condé, 33000, Bordeaux');
+        $result = $this->geolocationUtility->getLongitudeLatitudeByAddress('9 rue de condé, 33000, Bordeaux');
 
         $this->assertEquals(44.8435229, round($result['latitude'], 7));
         $this->assertEquals(-0.573404, round($result['longitude'], 7));
@@ -130,7 +130,7 @@ class GeolocationUtilityTest extends FunctionalTestCase
         $address->setCity('Bordeaux');
         $address->setZipcode('33000');
 
-        $result = $this->GeolocationUtility->findLongitudeLatitudeByAddress($address);
+        $result = $this->geolocationUtility->findLongitudeLatitudeByAddress($address);
 
         $this->assertEquals(44.8435229, round($result['latitude'], 7));
         $this->assertEquals(-0.573404, round($result['longitude'], 7));
@@ -173,7 +173,7 @@ class GeolocationUtilityTest extends FunctionalTestCase
         $address->setCity('Paris La Défense');
         $address->setZipcode('92911');
 
-        $result = $this->GeolocationUtility->findLongitudeLatitudeByAddress($address);
+        $result = $this->geolocationUtility->findLongitudeLatitudeByAddress($address);
 
         $this->assertEquals(48.8896563, round($result['latitude'], 7));
         $this->assertEquals(2.2422251, round($result['longitude'], 7));
@@ -193,7 +193,7 @@ class GeolocationUtilityTest extends FunctionalTestCase
         $this->geocoder->shouldReceive('geocodeQuery')->once()->andReturn(new AddressCollection([]));
         $this->logger->shouldReceive('error')->once();
 
-        $this->GeolocationUtility->getLongitudeLatitudeByAddress(', , ');
+        $this->geolocationUtility->getLongitudeLatitudeByAddress(', , ');
     }
 
     /**
@@ -213,7 +213,7 @@ class GeolocationUtilityTest extends FunctionalTestCase
 
         $address = new Address();
 
-        $this->GeolocationUtility->findLongitudeLatitudeByAddress($address);
+        $this->geolocationUtility->findLongitudeLatitudeByAddress($address);
     }
 
     /**
@@ -244,7 +244,7 @@ class GeolocationUtilityTest extends FunctionalTestCase
             ])
         );
 
-        $address = $this->GeolocationUtility->getAddress('9 rue de condé, 33000, Bordeaux');
+        $address = $this->geolocationUtility->getAddress('9 rue de condé, 33000, Bordeaux');
 
         $this->assertInstanceOf(Address::class, $address);
         $this->assertEquals('9 Rue de Condé', $address->getBlock1());
@@ -264,7 +264,7 @@ class GeolocationUtilityTest extends FunctionalTestCase
      */
     public function testCleanCity($expected, $city)
     {
-        $cityCleaned = $this->GeolocationUtility->cleanCity($city);
+        $cityCleaned = $this->geolocationUtility->cleanCity($city);
 
         $this->assertEquals($expected, $cityCleaned);
     }
@@ -280,7 +280,7 @@ class GeolocationUtilityTest extends FunctionalTestCase
     {
         $this->logger->shouldReceive('error')->once();
 
-        $this->GeolocationUtility->geocode('');
+        $this->geolocationUtility->geocode('');
     }
 
     /**
@@ -294,7 +294,7 @@ class GeolocationUtilityTest extends FunctionalTestCase
         $this->geocoder->shouldReceive('geocodeQuery')->once()->andThrow(new InvalidCredentials());
         $this->logger->shouldReceive('error')->once();
 
-        $this->GeolocationUtility->geocode(', ');
+        $this->geolocationUtility->geocode(', ');
     }
 
     /**
@@ -311,7 +311,57 @@ class GeolocationUtilityTest extends FunctionalTestCase
         ]));
         $this->logger->shouldReceive('error')->once();
 
-        $this->GeolocationUtility->geocode('vzmldkmlz ');
+        $this->geolocationUtility->geocode('vzmldkmlz ');
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::geocodeFromCoordinates
+     *
+     * @return void
+     * @expectedException \Geocoder\Exception\InvalidCredentials
+     */
+    public function testGeocodeFromCoordinatesInvalidCredentical()
+    {
+        $this->geocoder->shouldReceive('reverseQuery')->once()->andThrow(new InvalidCredentials());
+        $this->logger->shouldReceive('error')->once();
+
+        $this->geolocationUtility->geocodeFromCoordinates(5, 2);
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::geocodeFromCoordinates
+     *
+     * @return void
+     * @expectedException \Exception
+     */
+    public function testGeocodeFromCoordinatesWithoutResults()
+    {
+        $this->geocoder->shouldReceive('reverseQuery')->once()->andReturn(new AddressCollection());
+        $this->logger->shouldReceive('error')->once();
+
+        $this->geolocationUtility->geocodeFromCoordinates(5, 5);
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\GeolocationBundle\Utility\GeolocationUtility::geocodeFromCoordinates
+     *
+     * @return void
+     */
+    public function testGeocodeFromCoordinates()
+    {
+        $address1 = \Mockery::mock(GeocoderAddress::class);
+        $address2 = \Mockery::mock(GeocoderAddress::class);
+
+        $this->geocoder->shouldReceive('reverseQuery')->once()->andReturn(new AddressCollection(
+            [
+                $address1,
+                $address2
+            ]
+        ));
+        $this->logger->shouldReceive('error')->never();
+
+        $addressFound = $this->geolocationUtility->geocodeFromCoordinates(5, 5);
+        $this->assertEquals($address1, $addressFound);
     }
 
     /**

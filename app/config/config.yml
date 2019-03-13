@@ -13,7 +13,6 @@ framework:
         engines: ['twig']
     default_locale:  '%locale%'
     trusted_hosts:   ~
-    trusted_proxies: ~
     session:
         # handler_id set to null will use default session handler from php.ini
         handler_id: session.handler.native_file
@@ -28,19 +27,6 @@ framework:
 twig:
     debug:            '%kernel.debug%'
     strict_variables: '%kernel.debug%'
-
-# Assetic Configuration
-assetic:
-    bundles:        ['ChapleanGeolocationBundle']
-    ruby: '%ruby.bin%'
-    filters:
-        cssrewrite: ~
-        sass:
-            bin: '%sass.bin%'
-            apply_to: '\.scss'
-        compass:
-            bin: '%compass.bin%'
-            no_line_comments: true
 
 monolog:
     handlers:

@@ -4,7 +4,7 @@ namespace Tests\Chaplean\Bundle\GeolocationBundle\Resources\Entity;
 
 use Chaplean\Bundle\GeolocationBundle\Entity\Address;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Class DummyAddress.
@@ -19,7 +19,7 @@ class DummyAddress extends Address
      * @ORM\Column(type="integer", options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")
      *
-     * @JMS\Groups({"address_id", "address_all"})
+     * @Groups({"address_id", "address_all"})
      */
     private $id;
 

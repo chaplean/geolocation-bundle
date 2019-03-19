@@ -31,7 +31,6 @@ class AppKernel extends Kernel
             new Cravler\MaxMindGeoIpBundle\CravlerMaxMindGeoIpBundle(),
             new Chaplean\Bundle\GeolocationBundle\ChapleanGeolocationBundle(),
             new FOS\RestBundle\FOSRestBundle(),
-            new JMS\SerializerBundle\JMSSerializerBundle(),
             new Bazinga\GeocoderBundle\BazingaGeocoderBundle(),
         ];
 

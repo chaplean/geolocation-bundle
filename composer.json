@@ -35,7 +35,6 @@
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "^2.5",
         "friendsofsymfony/rest-bundle": "^2.1",
-        "jms/serializer-bundle": "^2.0",
         "sensio/framework-extra-bundle": " ^5.0.0",
         "symfony/assetic-bundle": "^2.3",
         "symfony/config": "^3.4 || ^4.0",
@@ -44,13 +43,13 @@
         "symfony/monolog-bundle": "^3.1",
         "symfony/twig-bundle": "^3.4",
         "symfony/validator": "^3.0 || ^4.0",
+        "symfony/serializer": "^3.0 || ^4.0",
         "willdurand/geocoder-bundle": "^5.0",
         "geocoder-php/google-maps-provider": "^4.0",
         "php-http/message": "^1.6",
         "php-http/guzzle6-adapter": "^1.1"
     },
     "require-dev": {
-        "chaplean/codeship-scripts": "^1.0",
         "chaplean/coding-standard": "^1.1",
         "chaplean/unit-bundle": "^7.0",
         "mockery/mockery": "dev-master",

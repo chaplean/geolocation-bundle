@@ -4,6 +4,7 @@ namespace Chaplean\Bundle\GeolocationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -18,7 +19,9 @@ class Address
      *
      * @ORM\Column(type="string", length=200, nullable=false, name="block1")
      *
+     * @JMS\Type("string")
      * @JMS\Groups({"address_block1", "address_all"})
+     * @Groups({"address_block1", "address_all"})
      *
      * @Assert\NotBlank(
      *     message="general.not_blank",
@@ -32,7 +35,9 @@ class Address
      *
      * @ORM\Column(type="string", length=200, nullable=true, name="block2")
      *
+     * @JMS\Type("string")
      * @JMS\Groups({"address_block2", "address_all"})
+     * @Groups({"address_block2", "address_all"})
      */
     protected $block2;
 
@@ -41,7 +46,9 @@ class Address
      *
      * @ORM\Column(type="string", length=200, nullable=true, name="block3")
      *
+     * @JMS\Type("string")
      * @JMS\Groups({"address_block3", "address_all"})
+     * @Groups({"address_block3", "address_all"})
      */
     protected $block3;
 
@@ -51,6 +58,7 @@ class Address
      * @ORM\Column(type="smallint", nullable=true, name="floor", options={"unsigned":true})
      *
      * @JMS\Groups({"address_floor", "address_all"})
+     * @Groups({"address_floor", "address_all"})
      */
     protected $floor;
 
@@ -59,7 +67,9 @@ class Address
      *
      * @ORM\Column(type="string", length=60, nullable=false, name="city_complement")
      *
+     * @JMS\Type("string")
      * @JMS\Groups({"address_city", "address_all"})
+     * @Groups({"address_city", "address_all"})
      *
      * @Assert\NotBlank(
      *     message="general.not_blank",
@@ -73,6 +83,7 @@ class Address
      *
      * @ORM\Column(type="integer", length=5, nullable=true, name="zipcode")
      *
+     * @JMS\Type("string")
      * @JMS\Groups({"address_zipcode", "address_all"})
      * @JMS\Accessor(getter="getZipcode",setter="setZipcode")
      *
@@ -88,7 +99,9 @@ class Address
      *
      * @ORM\Column(type="decimal", length=10, nullable=true, name="longitude", precision=10, scale=7)
      *
+     * @JMS\Type("float")
      * @JMS\Groups({"address_longitude", "address_all"})
+     * @Groups({"address_longitude", "address_all"})
      */
     protected $longitude;
 
@@ -97,7 +110,9 @@ class Address
      *
      * @ORM\Column(type="decimal", length=10, nullable=true, name="latitude", scale=7, precision=10)
      *
+     * @JMS\Type("float")
      * @JMS\Groups({"address_latitude", "address_all"})
+     * @Groups({"address_latitude", "address_all"})
      */
     protected $latitude;
 
@@ -224,13 +239,13 @@ class Address
     /**
      * Get zipcode.
      *
+     * @Groups({"address_zipcode", "address_all"})
+     *
      * @return string
      */
-    public function getZipcode()
+    public function getZipcode(): ?string
     {
-		return $this->zipcode !== null
-			? sprintf('%05d', $this->zipcode)
-			: null;
+        return $this->zipcode !== null ? sprintf('%05d', $this->zipcode) : null;
     }
 
     /**

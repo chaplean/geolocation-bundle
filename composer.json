@@ -23,12 +23,6 @@
             "app/AppKernel.php"
         ]
     },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://satis.chaplean.coop"
-        }
-    ],
     "require": {
         "php": ">=7.0.8",
         "cravler/maxmind-geoip-bundle": "^1.0",
